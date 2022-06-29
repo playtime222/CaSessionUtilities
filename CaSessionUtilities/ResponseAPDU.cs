@@ -122,9 +122,9 @@ public class ResponseAPDU
     /**
      * Returns a string representation of this response APDU.
      *
-     * @return a String representation of this response APDU.
+     * @return a string representation of this response APDU.
      */
-    //public String toString()
+    //public string toString()
     //{
     //    return "ResponseAPDU: " + apdu.Length + " bytes, SW="
     //        + Hex.toHexString(getSW());

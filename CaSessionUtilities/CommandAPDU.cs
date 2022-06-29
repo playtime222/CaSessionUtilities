@@ -419,7 +419,7 @@ namespace CaSessionUtilities
         /**
          * Returns a string representation of this command APDU.
          *
-         * @return a String representation of this command APDU.
+         * @return a string representation of this command APDU.
          */
         //public override string ToString()
         //{

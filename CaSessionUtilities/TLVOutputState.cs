@@ -100,7 +100,7 @@
         //      {
         //          if (state.isEmpty())
         //          {
-        //              throw new IllegalStateException("Tag not yet read.");
+        //              throw new InvalidOperationException("Tag not yet read.");
         //          }
         //          TLVStruct currentObject = state.peek();
         //          return currentObject.getTag();
@@ -110,13 +110,13 @@
         //      {
         //          if (state.isEmpty())
         //          {
-        //              throw new IllegalStateException("Length not yet known.");
+        //              throw new InvalidOperationException("Length not yet known.");
         //          }
         //          TLVStruct currentObject = state.peek();
         //          int length = currentObject.getLength();
         //          if (length < 0)
         //          {
-        //              throw new IllegalStateException("Length not yet knwon.");
+        //              throw new InvalidOperationException("Length not yet knwon.");
         //          }
         //          return length;
         //      }
@@ -131,7 +131,7 @@
         //      {
         //          if (state.isEmpty())
         //          {
-        //              throw new IllegalStateException("Length of value is unknown.");
+        //              throw new InvalidOperationException("Length of value is unknown.");
         //          }
         //          TLVStruct currentObject = state.peek();
         //          int currentLength = currentObject.getLength();
@@ -215,8 +215,8 @@
         //              state.pop();
         //              byte[] lengthBytes = TLVUtil.getLengthAsBytes(byteCount);
         //              byte[] value = currentObject.getValue();
-        //              updateValueBytesProcessed(lengthBytes, 0, lengthBytes.length);
-        //              updateValueBytesProcessed(value, 0, value.length);
+        //              updateValueBytesProcessed(lengthBytes, 0, lengthBytes.Length);
+        //              updateValueBytesProcessed(value, 0, value.Length);
         //              isAtStartOfTag = true;
         //              isAtStartOfLength = false;
         //              isReadingValue = false;
@@ -260,13 +260,13 @@
         //      {
         //          if (state.isEmpty())
         //          {
-        //              throw new IllegalStateException("Cannot get value yet.");
+        //              throw new InvalidOperationException("Cannot get value yet.");
         //          }
         //          return state.peek().getValue();
         //      }
 
         //      @Override
-        //    public String toString()
+        //    public string toString()
         //      {
         //          return state.toString();
         //      }
@@ -361,10 +361,10 @@
             }
 
             //  @Override
-            //public String toString()
+            //public string toString()
             //  {
             //      byte[] valueBytes = value.toByteArray();
-            //      return "[TLVStruct " + Integer.toHexString(tag) + ", " + (isLengthSet ? length : "UNDEFINED") + ", " + Hex.bytesToHexString(valueBytes) + "(" + valueBytes.length + ") ]";
+            //      return "[TLVStruct " + Integer.toHexString(tag) + ", " + (isLengthSet ? length : "UNDEFINED") + ", " + Hex.bytesToHexString(valueBytes) + "(" + valueBytes.Length + ") ]";
             //  }
         }
     }

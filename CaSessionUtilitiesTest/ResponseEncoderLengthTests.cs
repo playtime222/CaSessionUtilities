@@ -26,7 +26,7 @@ public class ResponseEncoderLengthTests
     //    encodedLengthTest(257, "82011101");
     //}
 
-    //private void encodedLengthTest(int inputLength, String expected)
+    //private void encodedLengthTest(int inputLength, string expected)
     //{
     //    var encoder = new AesSecureMessagingWrapperResponseEncoder(new byte[16], new byte[16]);
     //    var paddedLength = encoder.getPaddedLength(inputLength);

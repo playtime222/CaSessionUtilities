@@ -17,7 +17,6 @@ public abstract class SecureMessagingWrapper
 {
 
     private readonly int maxTranceiveLength;
-    private readonly bool _shouldCheckMAC;
     private long ssc;
 
 
@@ -40,10 +39,9 @@ public abstract class SecureMessagingWrapper
      *
      * @throws GeneralSecurityException when the available JCE providers cannot provide the necessary cryptographic primitives
      */
-    protected SecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, string cipherAlg, string macAlg, int maxTranceiveLength, bool shouldCheckMAC, long ssc)
+    protected SecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, string cipherAlg, string macAlg, int maxTranceiveLength, long ssc)
     {
         this.maxTranceiveLength = maxTranceiveLength;
-        _shouldCheckMAC = shouldCheckMAC;
 
         this.macAlg = macAlg;
         //this.cipherAlg= cipherAlg;
@@ -53,7 +51,7 @@ public abstract class SecureMessagingWrapper
         this.ssc = ssc;
 
         //this.cipher = Util.getCipher(cipherAlg);
-        //this.mac = Util.getMac(macAlg);
+        //this.mac = Util.getAesCMac(macAlg);
     }
 
     /**
@@ -117,16 +115,6 @@ public abstract class SecureMessagingWrapper
     }
 
     /**
-     * Returns a bool indicating whether this wrapper will check the MAC in wrapped response APDUs.
-     *
-     * @return a bool indicating whether this wrapper will check the MAC in wrapped response APDUs
-     */
-    public bool shouldCheckMAC()
-    {
-        return _shouldCheckMAC;
-    }
-
-    /**
      * Returns the maximum tranceive length of wrapped command and response APDUs,
      * typical values are 256 and 65536.
      *
@@ -153,72 +141,7 @@ public abstract class SecureMessagingWrapper
     }
 
     /**
-     * Unwraps the APDU buffer of a response APDU.
-     *
-     * @param responseAPDU the response APDU
-     *
-     * @return a new byte array containing the unwrapped buffer
-     */
-    //public ResponseAPDU unwrap(ResponseAPDU responseAPDU)
-    //{
-    //    ssc++;
-    //    try
-    //    {
-    //        byte[] data = responseAPDU.getData();
-    //        if (data == null || data.Length <= 0)
-    //        {
-    //            // no sense in unwrapping - card indicates some kind of error
-    //            throw new InvalidOperationException("Card indicates SM error, SW = " + Integer.toHexString(responseAPDU.getSW() & 0xFFFF));
-    //            /* FIXME: wouldn't it be cleaner to throw a CardServiceException? */
-    //        }
-    //        return unwrapResponseAPDU(responseAPDU);
-    //    }
-    //    catch (GeneralSecurityException gse)
-    //    {
-    //        throw new InvalidOperationException("Unexpected exception", gse);
-    //    }
-    //    catch (IOException ioe)
-    //    {
-    //        throw new InvalidOperationException("Unexpected exception", ioe);
-    //    }
-    //}
-
-    /**
-     * Checks the MAC.
-     *
-     * @param rapdu the bytes of the response APDU, including the {@code 0x8E} tag, the length of the MAC, the MAC itself, and the status word
-     * @param cc the MAC sent by the other party
-     *
-     * @return whether the computed MAC is identical
-     *
-     * @throws GeneralSecurityException on security related error
-     */
-    //protected bool checkMac(byte[] rapdu, byte[] cc)
-    //{
-    //    MemoryStream memoryStream = new MemoryStream();
-    //        //DataOutputStream dataOutputStream = new DataOutputStream(MemoryStream);
-    //    var dataOutputStream = memoryStream;
-    //    dataOutputStream.Write(getEncodedSendSequenceCounter());
-    //    byte[] paddedData = Util.pad(rapdu, 0, rapdu.Length - 2 - 8 - 2, getPadLength());
-    //    dataOutputStream.Write(paddedData, 0, paddedData.Length);
-    //    dataOutputStream.Flush();
-    //    dataOutputStream.Close();
-    //    //mac.init(ksMac);
-    //    byte[] cc2 = Crypto.getMac(macAlg, ksMac, dataOutputStream.ToArray());
-
-    //    if (cc2.Length > 8 && cc.Length == 8)
-    //    {
-    //        byte[] newCC2 = new byte[8];
-    //        Array.Copy(cc2, 0, newCC2, 0, newCC2.Length);
-    //        cc2 = newCC2;
-    //    }
-
-    //    return Arrays.Equals(cc, cc2);
-    //}
-
-    /**
      * Returns the length (in bytes) to use for padding.
-     *
      * @return the length to use for padding
      */
     protected abstract int getPadLength();
@@ -254,9 +177,6 @@ public abstract class SecureMessagingWrapper
      * @param commandAPDU the command APDU
      *
      * @return a byte array containing the wrapped APDU buffer
-     *
-     * @throws GeneralSecurityException on error wrapping the APDU
-     * @throws IOException on error writing the result to memory
      */
     private CommandAPDU wrapCommandAPDU(CommandAPDU commandAPDU)
     {
@@ -331,7 +251,7 @@ public abstract class SecureMessagingWrapper
 
     private byte[] GetDo8eBlock(byte[] n)
     {
-        var cc = Crypto.getMac(macAlg, ksMac, n);
+        var cc = Crypto.getAesCMac(/*macAlg,*/ ksMac, n);
         Trace.WriteLine($"{"mac",-10}: {cc.PrettyHexFormat()}");
         const int ccLength = 8;
         using MemoryStream memoryStream = new();
@@ -360,73 +280,6 @@ public abstract class SecureMessagingWrapper
     }
 
     /**
-       * Unwraps a response APDU sent by the ICC.
-       * Based on Section E.3 of TR-PKI, especially the examples.
-       *
-       * @param responseAPDU the response APDU
-       *
-       * @return a byte array containing the unwrapped APDU buffer
-       *
-       * @throws GeneralSecurityException on error unwrapping the APDU
-       * @throws IOException on error writing the result to memory
-       */
-    //  private ResponseAPDU unwrapResponseAPDU(ResponseAPDU responseAPDU) 
-    //  {
-    //    byte[] rapdu = responseAPDU.getBytes();
-    //if (rapdu == null || rapdu.Length < 2)
-    //{
-    //    throw new ArgumentException("Invalid response APDU");
-    //}
-    //cipher.init(Cipher.DECRYPT_MODE, ksEnc, getIV());
-
-    //byte[] data = new byte[0];
-    //byte[] cc = null;
-    //short sw = 0;
-    //var memoryStream = new MemoryStream(rapdu);
-    //BinaryReader inputStream = new BinaryReader(memoryStream);
-    //try
-    //{
-    //    bool isFinished = false;
-    //    while (!isFinished)
-    //    {
-    //        int tag = memoryStream.ReadByte();
-    //        switch (tag)
-    //        {
-    //            case (byte)0x87:
-    //                data = readDO87(inputStream, false);
-    //                break;
-    //            case (byte)0x85:
-    //                data = readDO87(inputStream, true);
-    //                break;
-    //            case (byte)0x99:
-    //                sw = readDO99(inputStream);
-    //                break;
-    //            case (byte)0x8E:
-    //                cc = readDO8E(inputStream);
-    //                isFinished = true;
-    //                break;
-    //            default:
-    //                        throw new Exception();
-    //                break;
-    //        }
-    //    }
-    //}
-    //finally
-    //{
-    //    inputStream.close();
-    //}
-    //if (shouldCheckMAC() && !checkMac(rapdu, cc))
-    //{
-    //    throw new InvalidOperationException("Invalid MAC");
-    //}
-    //MemoryStream bOut = new MemoryStream();
-    //bOut.write(data, 0, data.Length);
-    //bOut.write((sw & 0xFF00) >> 8);
-    //bOut.write(sw & 0x00FF);
-    //return new ResponseAPDU(bOut.ToArray());
-    //  }
-
-    /**
      * Encodes the expected length value to a byte array for inclusion in wrapped APDUs.
      * The result is a byte array of length 1 or 2.
      *
@@ -446,185 +299,4 @@ public abstract class SecureMessagingWrapper
             return new byte[] { (byte)((le & 0xFF00) >> 8), (byte)(le & 0xFF) };
         }
     }
-
-    /**
-     * Reads a data object.
-     * The {@code 0x87} tag has already been read.
-     *
-     * @param inputStream the stream to read from
-     * @param do85 whether to expect a {@code 0x85} (including an extra 1 length) data object.
-     *
-     * @return the bytes that were read
-     *
-     * @throws IOException on error reading from the stream
-     * @throws GeneralSecurityException on error decrypting the data
-     */
-    //private byte[] readDO87(BinaryReader inputStream, bool do85) {
-
-    //    /* Read length... */
-    //    int length = 0;
-    //int buf = inputStream.readUnsignedByte();
-    //if ((buf & 0x00000080) != 0x00000080)
-    //{
-    //    /* Short form */
-    //    length = buf;
-    //    if (!do85)
-    //    {
-    //        buf = inputStream.readUnsignedByte(); /* should be 0x01... */
-    //        if (buf != 0x01)
-    //        {
-    //            throw new InvalidOperationException("DO'87 expected 0x01 marker, found " + Hex.ToHexString(new byte[] { (byte)(buf & 0xFF) }));
-    //        }
-    //    }
-    //}
-    //else
-    //{
-    //    /* Long form */
-    //    int lengthBytesCount = buf & 0x0000007F;
-    //    for (int i = 0; i < lengthBytesCount; i++)
-    //    {
-    //        length = (length << 8) | inputStream.readUnsignedByte();
-    //    }
-    //    if (!do85)
-    //    {
-    //        buf = inputStream.readUnsignedByte(); /* should be 0x01... */
-    //        if (buf != 0x01)
-    //        {
-    //            throw new InvalidOperationException("DO'87 expected 0x01 marker");
-    //        }
-    //    }
-    //}
-    //if (!do85)
-    //{
-    //    length--; /* takes care of the extra 0x01 marker... */
-    //}
-    //    /* Read, decrypt, unpad the data... */
-    //    byte[] ciphertext = new byte[length];
-    //    inputStream.readFully(ciphertext);
-    //    byte[] paddedData = cipher.doFinal(ciphertext);
-    //    return Util.unpad(paddedData);
-    //  }
-
-    /**
-     * Reads a data object.
-     * The {@code 0x99} tag has already been read.
-     *
-     * @param inputStream the stream to read from
-     *
-     * @return the status word
-     *
-     * @throws IOException on error reading from the stream
-     */
-    //  private short readDO99(BinaryReader inputStream) 
-    //{
-    //    int length = inputStream.readUnsignedByte();
-    //    if (length != 2) {
-    //        throw new InvalidOperationException("DO'99 wrong length");
-    //    }
-    //    byte sw1 = inputStream.readByte();
-    //    byte sw2 = inputStream.readByte();
-    //    return (short)(((sw1 & 0x000000FF) << 8) | (sw2 & 0x000000FF));
-    //}
-
-    /**
-     * Reads a data object.
-     * This assumes that the {@code 0x8E} tag has already been read.
-     *
-     * @param inputStream the stream to read from
-     *
-     * @return the bytes that were read
-     *
-     * @throws IOException on error
-     */
-    //private byte[] readDO8E(BinaryReader inputStream) 
-    //{
-    //    int length = inputStream.readUnsignedByte();
-    //    if (length != 8 && length != 16) {
-    //        throw new InvalidOperationException("DO'8E wrong length for MAC: " + length);
-    //    }
-    //    byte[]
-    //    cc = new byte[length];
-    //inputStream.readFully(cc);
-    //return cc;
-    //  }
-
-    //  @Override
-    //  public String toString()
-    //{
-    //    return new StringBuilder()
-    //        .append("SecureMessagingWrapper [")
-    //        .append("ssc: ").append(ssc)
-    //        .append(", ksEnc: ").append(ksEnc)
-    //        .append(", ksMac: ").append(ksMac)
-    //        .append(", maxTranceiveLength: ").append(maxTranceiveLength)
-    //        .append(", shouldCheckMAC: ").append(shouldCheckMAC)
-    //        .append("]")
-    //        .toString();
-    //}
-
-    //@Override
-    //  public int hashCode()
-    //{
-    //    int prime = 31;
-    //    int result = 1;
-    //    result = prime * result + ((ksEnc == null) ? 0 : ksEnc.hashCode());
-    //    result = prime * result + ((ksMac == null) ? 0 : ksMac.hashCode());
-    //    result = prime * result + maxTranceiveLength;
-    //    result = prime * result + (shouldCheckMAC ? 1231 : 1237);
-    //    result = prime * result + (int)(ssc ^ (ssc >>> 32));
-    //    return result;
-    //}
-
-    //@Override
-    //  public bool equals(Object obj)
-    //{
-    //    if (this == obj)
-    //    {
-    //        return true;
-    //    }
-    //    if (obj == null)
-    //    {
-    //        return false;
-    //    }
-    //    if (GetType() != obj.getClass())
-    //    {
-    //        return false;
-    //    }
-
-    //    SecureMessagingWrapper other = (SecureMessagingWrapper)obj;
-    //    if (ksEnc == null)
-    //    {
-    //        if (other.ksEnc != null)
-    //        {
-    //            return false;
-    //        }
-    //    }
-    //    else if (!ksEnc.equals(other.ksEnc))
-    //    {
-    //        return false;
-    //    }
-    //    if (ksMac == null)
-    //    {
-    //        if (other.ksMac != null)
-    //        {
-    //            return false;
-    //        }
-    //    }
-    //    else if (!ksMac.equals(other.ksMac))
-    //    {
-    //        return false;
-    //    }
-    //    if (maxTranceiveLength != other.maxTranceiveLength)
-    //    {
-    //        return false;
-    //    }
-    //    if (shouldCheckMAC != other.shouldCheckMAC)
-    //    {
-    //        return false;
-    //    }
-
-    //    return ssc == other.ssc;
-    //}
-    //}
-
 }

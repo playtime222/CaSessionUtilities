@@ -175,7 +175,7 @@ public class TLVOutputStream //extends OutputStream
     public void writeValueEnd()
     {
         //if (state.isAtStartOfLength()) {
-        //    throw new IllegalStateException("Not processing value yet.");
+        //    throw new InvalidOperationException("Not processing value yet.");
         //}
         //if (state.isAtStartOfTag() && !state.isDummyLengthSet()) {
         //    return; /* TODO: check if this case ever happens. */
@@ -212,7 +212,7 @@ public class TLVOutputStream //extends OutputStream
     public /*override*/ void close()
     {
         //if (!state.canBeWritten()) {
-        //    throw new IllegalStateException("Cannot close stream yet, illegal TLV state.");
+        //    throw new InvalidOperationException("Cannot close stream yet, illegal TLV state.");
         //}
         //outputStream.close();
     }
