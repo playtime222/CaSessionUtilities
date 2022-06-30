@@ -10,46 +10,61 @@ using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilities
 {
     public static class Crypto
     {
-        public static byte[] getAESCBCPKCS5PaddingCipherText(byte[] key, byte[] iv, byte[] data)
+        public static byte[] getAESCBCPKCS5PaddingCipherText(byte[] key, byte[] iv, byte[] plainText)
         {
             var messageCipher = CipherUtilities.GetCipher("AES/CBC/PKCS5Padding");
             messageCipher.Init(true, new ParametersWithIV(new KeyParameter(key), iv));
-            return messageCipher.DoFinal(data);
+            return messageCipher.DoFinal(plainText);
         }
 
-        public static byte[] getAESCBCPKCS5PaddingPlainText(byte[] key, byte[] iv, byte[] data)
+        public static byte[] getAESCBCNoPaddingCipherText(byte[] key, byte[] iv, byte[] plainText)
+        {
+            var messageCipher = CipherUtilities.GetCipher("AES/CBC/NoPadding");
+            messageCipher.Init(true, new ParametersWithIV(new KeyParameter(key), iv));
+            return messageCipher.DoFinal(plainText);
+        }
+
+        public static byte[] getDESedeCBCNoPaddingCipherText(byte[] key, byte[] iv, byte[] plainText)
+        {
+            var messageCipher = CipherUtilities.GetCipher("DESede/CBC/NoPadding");
+            messageCipher.Init(true, new ParametersWithIV(new KeyParameter(key), iv));
+            return messageCipher.DoFinal(plainText);
+        }
+
+        public static byte[] getAESCBCPKCS5PaddingPlainText(byte[] key, byte[] iv, byte[] cipherText)
         {
             var messageCipher = CipherUtilities.GetCipher("AES/CBC/PKCS5Padding");
             messageCipher.Init(false, new ParametersWithIV(new KeyParameter(key), iv));
-            return messageCipher.DoFinal(data);
+            return messageCipher.DoFinal(cipherText);
         }
 
         //Also "AES/ECB/NoPadding"
-        public static byte[] getCipherText(string algName, byte[] key, byte[] iv, byte[] data)
+        public static byte[] getSscCipherText(string algName, byte[] key, byte[] data)
         {
             var messageCipher = CipherUtilities.GetCipher(algName);
-            messageCipher.Init(true, new ParametersWithIV(new KeyParameter(key), iv));
+            messageCipher.Init(true, new KeyParameter(key));
             return messageCipher.DoFinal(data);
         }
 
 
-        
+
 
         ///// <summary>
         ///// 
         ///// </summary>
         ///// <param name="alg">Better be "AES/ECB/NoPadding"</param>
         ///// <param name="key"></param>
-        ///// <param name="data"></param>
+        ///// <param name="plainText"></param>
         ///// <returns></returns>
         ///// <exception cref="NotImplementedException"></exception>
-        //public static byte[] getCipherText(string alg, byte[] key, byte[] data)
+        //public static byte[] getCipherText(string alg, byte[] key, byte[] plainText)
         //{
         //    throw new NotImplementedException();
         //}

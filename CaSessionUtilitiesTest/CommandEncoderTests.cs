@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using CaSessionUtilities;
 using Org.BouncyCastle.Utilities.Encoders;
-
 namespace CaSessionUtilitiesTest;
 
 public class CommandEncoderTests
@@ -41,7 +40,7 @@ public class CommandEncoderTests
         Trace.WriteLine("");
 
         var wrapper = new AESSecureMessagingWrapper(Hex.Decode(ksEncString), Hex.Decode(ksMacString), 0);
-        var wrapped = wrapper.wrap(plainApdu);
+        var wrapped = new CommandEncoder(wrapper).wrap(plainApdu);
 
         Trace.WriteLine("data      : " + wrapped.getData().PrettyHexFormat());
 

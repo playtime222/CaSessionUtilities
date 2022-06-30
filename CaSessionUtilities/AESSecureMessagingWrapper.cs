@@ -8,14 +8,12 @@ namespace CaSessionUtilities;
 
 public class AESSecureMessagingWrapper : SecureMessagingWrapper
 {
-    private byte[] ksEnc;
     private const string sscIVCipher = "AES/ECB/NoPadding";
 
-  public AESSecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, long ssc) : this(ksEnc, ksMac, 256, ssc) { }
+    public AESSecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, long ssc) : this(ksEnc, ksMac, 256, ssc) { }
 
     public AESSecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, int maxTranceiveLength, long ssc)
-    :
-        base(ksEnc, ksMac, "AES/CBC/NoPadding", "AESCMAC", maxTranceiveLength, ssc)
+    : base(ksEnc, ksMac, "AES/CBC/NoPadding", "AESCMAC")
     {
         //sscIVCipher = Util.getCipher("AES/ECB/NoPadding", Cipher.ENCRYPT_MODE, ksEnc);
     }
@@ -26,11 +24,13 @@ public class AESSecureMessagingWrapper : SecureMessagingWrapper
      *
      * @return the length to use for padding
      */
-    protected override int getPadLength()
+    public override int getPadLength()
     {
         return 16;
     }
 
+    public override byte[] CalculateMacForDo8eBlock(byte[] n)
+        => Crypto.getAesCMac(KsMac, n);
     /**
      * Returns the send sequence counter as bytes, making sure
      * the 128 bit (16 byte) block-size is used.
@@ -38,8 +38,8 @@ public class AESSecureMessagingWrapper : SecureMessagingWrapper
      * @return the send sequence counter as a 16 byte array
      */
 
-    protected override byte[] getEncodedSendSequenceCounter() 
-        => new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)getSendSequenceCounter() };
+    public override byte[] getEncodedSendSequenceCounter(long ssc) 
+        => new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)ssc };
 
     /**
      * Returns the IV by encrypting the send sequence counter.
@@ -58,8 +58,10 @@ public class AESSecureMessagingWrapper : SecureMessagingWrapper
     //}
 
     //Was this not 
-    protected override byte[] getIV()
+    private byte[] getIV()
     {
-        return Crypto.getCipherText(sscIVCipher, ksEnc, new byte[0], getEncodedSendSequenceCounter());
+        throw new NotImplementedException();
+        //return Crypto.getCipherText(sscIVCipher, ksEnc, new byte[0], getEncodedSendSequenceCounter());
     }
+
 }

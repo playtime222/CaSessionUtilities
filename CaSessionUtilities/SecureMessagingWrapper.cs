@@ -7,23 +7,20 @@ using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilities;
 
-/**
-     * Secure messaging wrapper base class.
-     * @author The JMRTD team
-     *
-     * @version $Revision: 1807 $
-     */
+
+
+/// <summary>
+/// JUST the encryption methods required during the wrapping of the command and the response
+/// </summary>
 public abstract class SecureMessagingWrapper
 {
-
-    private readonly int maxTranceiveLength;
-    private long ssc;
-
+    public string CipherAlg { get; }
+    public string MacAlg { get; }
 
     //private readonly string cipherAlg;
-    private readonly string macAlg;
-    private readonly byte[] ksEnc;
-    private readonly byte[] ksMac;
+    public byte[] KsEnc { get; }
+    public byte[] KsMac { get; }
+    public int MaxTranceiveLength = 256;
 
     /**
      * Constructs a secure messaging wrapper based on the secure messaging
@@ -39,16 +36,13 @@ public abstract class SecureMessagingWrapper
      *
      * @throws GeneralSecurityException when the available JCE providers cannot provide the necessary cryptographic primitives
      */
-    protected SecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, string cipherAlg, string macAlg, int maxTranceiveLength, long ssc)
+    protected SecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, string cipherAlg, string macAlg)
     {
-        this.maxTranceiveLength = maxTranceiveLength;
+        CipherAlg = cipherAlg;
+        MacAlg = macAlg;
 
-        this.macAlg = macAlg;
-        //this.cipherAlg= cipherAlg;
-
-        this.ksEnc = ksEnc;
-        this.ksMac = ksMac;
-        this.ssc = ssc;
+        KsEnc = ksEnc;
+        KsMac = ksMac;
 
         //this.cipher = Util.getCipher(cipherAlg);
         //this.mac = Util.getAesCMac(macAlg);
@@ -89,11 +83,11 @@ public abstract class SecureMessagingWrapper
      *
      * @return the current value of the send sequence counter.
      */
-    public long getSendSequenceCounter()
-    {
-        return ssc;
-    }
-
+    //public long getSendSequenceCounter()
+    //{
+    //    return ssc;
+    //}
+    public abstract byte[] getEncodedSendSequenceCounter(long ssc);
     /**
      * Returns the shared key for encrypting APDU payloads.
      *
@@ -101,7 +95,7 @@ public abstract class SecureMessagingWrapper
      */
     public byte[] getEncryptionKey()
     {
-        return ksEnc;
+        return KsEnc;
     }
 
     /**
@@ -111,18 +105,7 @@ public abstract class SecureMessagingWrapper
      */
     public byte[] getMACKey()
     {
-        return ksMac;
-    }
-
-    /**
-     * Returns the maximum tranceive length of wrapped command and response APDUs,
-     * typical values are 256 and 65536.
-     *
-     * @return the maximum tranceive length of wrapped command and response APDUs
-     */
-    public int getMaxTranceiveLength()
-    {
-        return maxTranceiveLength;
+        return KsMac;
     }
 
     /**
@@ -134,17 +117,13 @@ public abstract class SecureMessagingWrapper
      *
      * @return length of the command APDU after wrapping
      */
-    public CommandAPDU wrap(CommandAPDU commandAPDU)
-    {
-        ssc++;
-        return wrapCommandAPDU(commandAPDU);
-    }
+
 
     /**
      * Returns the length (in bytes) to use for padding.
      * @return the length to use for padding
      */
-    protected abstract int getPadLength();
+    public abstract int getPadLength();
 
     /**
      * Returns the initialization vector to be used by the encryption cipher.
@@ -153,14 +132,14 @@ public abstract class SecureMessagingWrapper
      *
      * @throws GeneralSecurityException on error constructing the parameter specification object
      */
-    protected abstract byte[] getIV();
+    //protected abstract byte[] getIV();
 
     /**
      * Returns the send sequence counter encoded as a byte array for inclusion in wrapped APDUs.
      *
      * @return the send sequence counter encoded as byte array
      */
-    protected abstract byte[] getEncodedSendSequenceCounter();
+    public abstract byte[] CalculateMacForDo8eBlock(byte[] n);
 
     /* PRIVATE BELOW. */
 
@@ -170,6 +149,29 @@ public abstract class SecureMessagingWrapper
      *   - Response APDU: [DO‘85’ or DO‘87’] [DO‘99’] DO‘8E’.
      */
 
+
+
+}
+
+
+
+public class CommandEncoder
+{
+
+    private const long SSC = 1;
+
+    private SecureMessagingWrapper _Wrapper;
+
+    public CommandEncoder(SecureMessagingWrapper wrapper)
+    {
+        _Wrapper = wrapper;
+    }
+
+    public CommandAPDU wrap(CommandAPDU commandAPDU)
+    {
+        return wrapCommandAPDU(commandAPDU);
+    }
+    
     /**
      * Performs the actual encoding of a command APDU.
      * Based on Section E.3 of ICAO-TR-PKI, especially the examples.
@@ -188,7 +190,7 @@ public abstract class SecureMessagingWrapper
         int le = commandAPDU.Ne;
 
         byte[] maskedHeader = { (byte)(cla | (byte)0x0C), (byte)ins, (byte)p1, (byte)p2 };
-        byte[] paddedMaskedHeader = Util.pad(maskedHeader, getPadLength());
+        byte[] paddedMaskedHeader = Util.pad(maskedHeader, _Wrapper.getPadLength());
 
         bool hasDO85 = ((byte)commandAPDU.INS == ISO7816.INS_READ_BINARY2);
 
@@ -245,13 +247,16 @@ public abstract class SecureMessagingWrapper
         else
         {
             /* Not sure if this case ever occurs, but this is consistent with previous behavior. */
-            return new CommandAPDU(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, getMaxTranceiveLength());
+            return new CommandAPDU(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, _Wrapper.MaxTranceiveLength);
         }
     }
 
     private byte[] GetDo8eBlock(byte[] n)
     {
-        var cc = Crypto.getAesCMac(/*macAlg,*/ ksMac, n);
+        //var cc = Crypto.getAesCMac(/*macAlg,*/ _KsMac, n);
+        var cc = _Wrapper.CalculateMacForDo8eBlock(n);
+
+
         Trace.WriteLine($"{"mac",-10}: {cc.PrettyHexFormat()}");
         const int ccLength = 8;
         using MemoryStream memoryStream = new();
@@ -267,14 +272,14 @@ public abstract class SecureMessagingWrapper
     {
         using var ms = new MemoryStream();
 
-        var encSeq = getEncodedSendSequenceCounter();
+        var encSeq = _Wrapper.getEncodedSendSequenceCounter(SSC);
         Trace.WriteLine($"{"ssc",-10}: {encSeq.PrettyHexFormat()}");
 
         ms.write(encSeq);
         ms.write(paddedMaskedHeader);
         ms.write(do8587);
         ms.write(do97);
-        var n = Util.pad(ms.ToArray(), getPadLength());
+        var n = Util.pad(ms.ToArray(), _Wrapper.getPadLength());
         Trace.WriteLine($"{"n",-10}: {n.PrettyHexFormat()}");
         return n;
     }
@@ -299,4 +304,5 @@ public abstract class SecureMessagingWrapper
             return new byte[] { (byte)((le & 0xFF00) >> 8), (byte)(le & 0xFF) };
         }
     }
+
 }

@@ -77,7 +77,7 @@ public class CreateRdeMessageParametersCommand
         int shortFileId = args.FileShortId;
         var sfi = 0x80 | (shortFileId & 0xFF);
         var plainApdu = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_READ_BINARY, sfi, 0, args.ReadLength);
-        var wrapped = fakeCa.Wrapper.wrap(plainApdu);
+        var wrapped =  new CommandEncoder(fakeCa.Wrapper).wrap(plainApdu);
         //Trace.WriteLine("data      : " + wrapped.getData().PrettyHexFormat());
         var wrappedCommand = wrapped.ToArray();
         var responseEncoder = new AesSecureMessagingWrapperResponseEncoder(fakeCa.Wrapper.getEncryptionKey(), fakeCa.Wrapper.getMACKey());
