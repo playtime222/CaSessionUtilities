@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using CaSessionUtilities;
 using CaSessionUtilities.Messaging;
-using CaSessionUtilities.Messaging.zipV2;
+using CaSessionUtilities.Messaging.ZipV2;
 using CaSessionUtilities.Wrapping;
 using CaSessionUtilities.Wrapping.Implementation;
 using Org.BouncyCastle.Security;
