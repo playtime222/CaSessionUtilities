@@ -39,7 +39,7 @@ public class CommandEncoderTests
         Assert.Equal(Hex.Decode(hexPlain), actualPlain);
         Trace.WriteLine("");
 
-        var wrapper = new AESSecureMessagingWrapper(Hex.Decode(ksEncString), Hex.Decode(ksMacString), 0);
+        var wrapper = new AesSecureMessagingWrapper(Hex.Decode(ksEncString), Hex.Decode(ksMacString), 0);
         var wrapped = new CommandEncoder(wrapper).wrap(plainApdu);
 
         Trace.WriteLine("data      : " + wrapped.getData().PrettyHexFormat());

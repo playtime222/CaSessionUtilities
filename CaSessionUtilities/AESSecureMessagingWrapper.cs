@@ -3,19 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 
 namespace CaSessionUtilities;
 
-public class AESSecureMessagingWrapper : SecureMessagingWrapper
+public class AesSecureMessagingWrapper : SecureMessagingWrapper
 {
-    private const string sscIVCipher = "AES/ECB/NoPadding";
+    private const string sscIVCipherName = "AES/ECB/NoPadding";
 
-    public AESSecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, long ssc) : this(ksEnc, ksMac, 256, ssc) { }
+    public AesSecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, long ssc) : this(ksEnc, ksMac) { }
 
-    public AESSecureMessagingWrapper(byte[] ksEnc, byte[] ksMac, int maxTranceiveLength, long ssc)
+    public AesSecureMessagingWrapper(byte[] ksEnc, byte[] ksMac)
     : base(ksEnc, ksMac, "AES/CBC/NoPadding", "AESCMAC")
     {
         //sscIVCipher = Util.getCipher("AES/ECB/NoPadding", Cipher.ENCRYPT_MODE, ksEnc);
+    }
+
+    //private byte[] iv;
+
+    private byte[] getIv(byte[] ksEnc, byte[] encodedSSC)
+    {
+        var sscIVCipher = CipherUtilities.GetCipher(sscIVCipherName);
+        sscIVCipher.Init(true, new KeyParameter(ksEnc));
+        return sscIVCipher.DoFinal(encodedSSC);
     }
 
     /**
@@ -24,13 +36,17 @@ public class AESSecureMessagingWrapper : SecureMessagingWrapper
      *
      * @return the length to use for padding
      */
-    public override int getPadLength()
+    public override int BlockSize => 16;
+
+    public override byte[] CalculateMac(byte[] data)
+        => Crypto.getAesCMac(KsMac, data);
+
+    public override byte[] GetEncodedDataForResponse(byte[] response)
     {
-        return 16;
+        var iv = getIv(KsEnc, GetEncodedSendSequenceCounter(2)); //Contains state -> 2 the SSC counter...
+        return Crypto.getAESCBCNoPaddingCipherText(KsEnc, iv, response);
     }
 
-    public override byte[] CalculateMacForDo8eBlock(byte[] n)
-        => Crypto.getAesCMac(KsMac, n);
     /**
      * Returns the send sequence counter as bytes, making sure
      * the 128 bit (16 byte) block-size is used.
@@ -38,7 +54,7 @@ public class AESSecureMessagingWrapper : SecureMessagingWrapper
      * @return the send sequence counter as a 16 byte array
      */
 
-    public override byte[] getEncodedSendSequenceCounter(long ssc) 
+    public override byte[] GetEncodedSendSequenceCounter(long ssc) 
         => new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)ssc };
 
     /**
@@ -56,12 +72,4 @@ public class AESSecureMessagingWrapper : SecureMessagingWrapper
     //    byte[] encryptedSSC = sscIVCipher.doFinal(getEncodedSendSequenceCounter());
     //    return new IvParameterSpec(encryptedSSC);
     //}
-
-    //Was this not 
-    private byte[] getIV()
-    {
-        throw new NotImplementedException();
-        //return Crypto.getCipherText(sscIVCipher, ksEnc, new byte[0], getEncodedSendSequenceCounter());
-    }
-
 }

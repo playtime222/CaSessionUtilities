@@ -80,7 +80,7 @@ public class CreateRdeMessageParametersCommand
         var wrapped =  new CommandEncoder(fakeCa.Wrapper).wrap(plainApdu);
         //Trace.WriteLine("data      : " + wrapped.getData().PrettyHexFormat());
         var wrappedCommand = wrapped.ToArray();
-        var responseEncoder = new AesSecureMessagingWrapperResponseEncoder(fakeCa.Wrapper.getEncryptionKey(), fakeCa.Wrapper.getMACKey());
+        var responseEncoder = new AesSecureMessagingWrapperResponseEncoder(fakeCa.Wrapper.KsEnc, fakeCa.Wrapper.KsMac);
         var wrappedResponse = responseEncoder.Write(Arrays.CopyOf(args.FileContent, args.ReadLength));
 
         return new RdeMessageParameters { EphemeralPublicKey = fakeCa.PcdPublicKey, WrappedCommand = wrappedCommand, WrappedResponse = wrappedResponse };
@@ -162,7 +162,7 @@ public class EACCAProtocol
         //    return new DESedeSecureMessagingWrapper(ksEnc, ksMac, maxTranceiveLength, false, 0L);
 
         if (cipherAlg.StartsWith("AES"))
-            return new AESSecureMessagingWrapper(ksEnc, ksMac, maxTranceiveLength, 0L);
+            return new AesSecureMessagingWrapper(ksEnc, ksMac);
 
         throw new InvalidOperationException("Unsupported cipher algorithm " + cipherAlg);
     }

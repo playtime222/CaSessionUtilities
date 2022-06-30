@@ -110,5 +110,10 @@ namespace CaSessionUtilities
             decryptCipher.ProcessBytes(value, 0, value.Length, something, 0);
             decryptCipher.DoFinal(something, 0); //Throws if bad gmac
         }
+
+        public static byte[] getISO9797Alg3Mac(byte[] ksMac, byte[] joined)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
