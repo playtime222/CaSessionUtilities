@@ -13,7 +13,7 @@ public class CryptoSanityCheckCrossPlatform
     [Theory]
     private void SanityCheckCrossPlatformAesCmac(string buffer, string ksMac, string expected)
     {
-        var result = Crypto.getAesCMac(Hex.Decode(ksMac), Hex.Decode(buffer));
+        var result = Crypto.GetAesCMac(Hex.Decode(ksMac), Hex.Decode(buffer));
         Assert.Equal(Hex.Decode(expected), result);
     }
 }
@@ -27,9 +27,9 @@ public class CryptoSanityChecks
     [Theory]
     private void SanityCheckAesGmac(string input, string key, string iv)
     {
-        var result = Crypto.getAesGMac(Hex.Decode(key), Hex.Decode(iv), Hex.Decode(input));
-        Crypto.verifyAesGMac(Hex.Decode(key), Hex.Decode(iv), Hex.Decode(input), result);
+        var result = Crypto.GetAesGMac(Hex.Decode(key), Hex.Decode(iv), Hex.Decode(input));
+        Crypto.VerifyAesGMac(Hex.Decode(key), Hex.Decode(iv), Hex.Decode(input), result);
         result[4] = (byte)~result[4];
-        Assert.Throws<InvalidCipherTextException>(()=>Crypto.verifyAesGMac(Hex.Decode(key), Hex.Decode(iv), Hex.Decode(input), result.Skip(1).ToArray()));
+        Assert.Throws<InvalidCipherTextException>(()=>Crypto.VerifyAesGMac(Hex.Decode(key), Hex.Decode(iv), Hex.Decode(input), result.Skip(1).ToArray()));
     }
 }

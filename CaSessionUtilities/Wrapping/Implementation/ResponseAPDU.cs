@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Encoders;
 
-namespace CaSessionUtilities;
+namespace CaSessionUtilities.Wrapping.Implementation;
 
 /**
      * A response APDU as defined in ISO/IEC 7816-4. It consists of a conditional
@@ -75,7 +75,7 @@ public class ResponseAPDU
          */
     public byte[] getData()
     {
-        byte[] data = new byte[apdu.Length - 2];
+        var data = new byte[apdu.Length - 2];
         Array.Copy(apdu, 0, data, 0, data.Length);
         return data;
     }
@@ -110,7 +110,7 @@ public class ResponseAPDU
          */
     public int getSW()
     {
-        return (getSW1() << 8) | getSW2();
+        return getSW1() << 8 | getSW2();
     }
 
     /**

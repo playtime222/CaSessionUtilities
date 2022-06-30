@@ -6,25 +6,16 @@ namespace CaSessionUtilities.Messaging;
  */
 public class MessageContentArgs
 {
-    private string unencryptedNote;
-    private List<FileArgs> files = new();
+    public string UnencryptedNote { get; set; }
+    private readonly List<FileArgs> _Files = new();
 
-    public string getUnencryptedNote() { return unencryptedNote; }
-    public void setUnencryptedNote(string unencryptedNote)
+    
+    //TODO seperate building from accessing
+    public FileArgs[] FileArgs => _Files.ToArray();
+
+    public void Add(FileArgs file)
     {
-        this.unencryptedNote = unencryptedNote;
-    }
-
-    //public FileArgs getFileArgs(int index) { return files.get(index); }
-    public FileArgs[] getFileArgs()
-    {
-
-        return files.ToArray();
-    }
-
-    public void add(FileArgs file)
-    {
-        files.Add(file);
+        _Files.Add(file);
     }
 }
 

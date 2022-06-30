@@ -1,4 +1,4 @@
-﻿namespace CaSessionUtilities
+﻿namespace CaSessionUtilities.Wrapping.Implementation
 {
     /*
      * This file is part of the SCUBA smart card framework.
@@ -142,15 +142,15 @@
         public void setTagProcessed(int tag)
         {
             /* Length is set to MAX INT, we will update it when caller calls our setLengthProcessed. */
-            TLVStruct obj = new TLVStruct(tag);
+            var obj = new TLVStruct(tag);
             if (state.Count != 0)
             {
-                TLVStruct parent = state.Peek();
-                byte[] tagBytes = TLVUtil.getTagAsBytes(tag);
+                var parent = state.Peek();
+                var tagBytes = TLVUtil.GetTagAsBytes(tag);
                 parent.write(tagBytes, 0, tagBytes.Length);
             }
             state.Enqueue(obj);
-            this.isAtStartOfTag = false;
+            isAtStartOfTag = false;
             isAtStartOfLength = true;
             isReadingValue = false;
         }
@@ -169,9 +169,7 @@
         public bool isDummyLengthSet()
         {
             if (state.Count == 0)
-            {
                 return false;
-            }
             return !state.Peek().isLengthSet();
         }
 
@@ -180,11 +178,11 @@
             if (length < 0)
                 throw new ArgumentException("Cannot set negative length (length = " + length + ").");
 
-            TLVStruct obj = state.Dequeue();
+            var obj = state.Dequeue();
             if (state.Count != 0)
             {
-                TLVStruct parent = state.Peek();
-                byte[] lengthBytes = TLVUtil.getLengthAsBytes(length);
+                var parent = state.Peek();
+                var lengthBytes = TLVUtil.GetLengthAsBytes(length);
                 parent.write(lengthBytes, 0, lengthBytes.Length);
             }
             obj.setLength(length);
@@ -213,7 +211,7 @@
         //          {
         //              /* Update parent. */
         //              state.pop();
-        //              byte[] lengthBytes = TLVUtil.getLengthAsBytes(byteCount);
+        //              byte[] lengthBytes = TLVUtil.GetLengthAsBytes(byteCount);
         //              byte[] value = currentObject.getValue();
         //              updateValueBytesProcessed(lengthBytes, 0, lengthBytes.Length);
         //              updateValueBytesProcessed(value, 0, value.Length);
@@ -226,15 +224,11 @@
         public void updateValueBytesProcessed(byte[] bytes, int offset, int length)
         {
             if (state.Count == 0)
-            {
                 return;
-            }
-            TLVStruct currentObject = state.Peek();
-            long bytesLeft = currentObject.getLength() - currentObject.getValueBytesProcessed();
+            var currentObject = state.Peek();
+            var bytesLeft = currentObject.getLength() - currentObject.getValueBytesProcessed();
             if (length > bytesLeft)
-            {
                 throw new ArgumentException("Cannot process " + length + " bytes! Only " + bytesLeft + " bytes left in this TLV object " + currentObject);
-            }
 
             currentObject.write(bytes, offset, length);
 
@@ -279,9 +273,7 @@
             foreach (var stackFrame in state)
             {
                 if (!stackFrame.isLengthSet())
-                {
                     return false;
-                }
             }
             return true;
         }
@@ -308,7 +300,7 @@
             {
             }
 
-            public TLVStruct(int tag) : this(tag, Int32.MaxValue, false, null)
+            public TLVStruct(int tag) : this(tag, int.MaxValue, false, null)
             {
             }
 
@@ -316,18 +308,16 @@
             {
                 this.tag = tag;
                 this.length = length;
-                this._isLengthSet = isLengthSet;
+                _isLengthSet = isLengthSet;
                 this.value = new MemoryStream();
                 if (value != null)
-                {
                     this.value.Write(value);
-                }
             }
 
             public void setLength(int length)
             {
                 this.length = length;
-                this._isLengthSet = true;
+                _isLengthSet = true;
             }
 
             public int getTag()

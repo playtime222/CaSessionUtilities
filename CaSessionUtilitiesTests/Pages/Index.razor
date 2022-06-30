@@ -2,6 +2,8 @@
 @using System.Diagnostics;
 @using Org.BouncyCastle.Utilities.Encoders;
 @using CaSessionUtilities;
+@using CaSessionUtilities.Wrapping;
+@using CaSessionUtilities.Wrapping.Implementation;
 @using System.Text
 
 
@@ -12,7 +14,7 @@
     @foreach (var msg in _Messages)
     {
         <tr>
-            <td style="font-family: monospace, monospace;white-space: pre;">@msg</td>
+            <td style="font-family: monospace, monospace; white-space: pre;">@msg</td>
         </tr>
     }
 </table>
@@ -52,8 +54,8 @@
 
         sb.AppendLine("");
 
-        var wrapper = new AesSecureMessagingWrapper(Hex.Decode(ksEncString), Hex.Decode(ksMacString), 0);
-        var wrapped = new CommandEncoder(wrapper).wrap(plainApdu); //, 1
+        var wrapper = new AesSecureMessagingWrapper(Hex.Decode(ksEncString), Hex.Decode(ksMacString));
+        var wrapped = new CommandEncoder(wrapper).Encode(plainApdu); //, 1
 
         sb.AppendLine("data      : " + wrapped.getData().PrettyHexFormat());
 

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using CaSessionUtilities;
+using CaSessionUtilities.Wrapping;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Encoders;
 
@@ -18,23 +19,7 @@ public class ResponseEncoderTests
     {
         var ksEnc = Hex.Decode(ksEncString);
         var ksMac = Hex.Decode(ksMacString);
-        var encoder = new AesSecureMessagingWrapperResponseEncoder(ksEnc, ksMac);
-        var result = encoder.Write(Arrays.CopyOf(Hex.Decode(HexEncodedDg14), requestedLength));
-
-        Trace.WriteLine("Actual  : " + Hex.ToHexString(result));
-        Trace.WriteLine("Expected: " + expectedWrappedResponse.ToLower());
-        Assert.Equal(Hex.Decode(expectedWrappedResponse), result);
-    }
-
-
-    [InlineData("7319D1537EF2FE5CB46AFCFF2DF33B521F3A0C4FA92212D98EB49D9CD6BB8916", "ADCBA368FD14A836908252EF76D09BAD2766C5FFB2FE7857F468676FC4B293E0", 1, "8711016D9F6F6FDA79FF285C2C1D3AEA1FFD03990290008E089C3B7B89BB7849929000")]
-    //TODO more!!!!!
-    [Theory]
-    private void Write2(string ksEncString, string ksMacString, int requestedLength, string expectedWrappedResponse)
-    {
-        var ksEnc = Hex.Decode(ksEncString);
-        var ksMac = Hex.Decode(ksMacString);
-        var encoder = new ResponseEncoder(new AesSecureMessagingWrapper(ksEnc, ksMac, 2));
+        var encoder = new ResponseEncoder(new AesSecureMessagingWrapper(ksEnc, ksMac));
         var result = encoder.Write(Arrays.CopyOf(Hex.Decode(HexEncodedDg14), requestedLength));
 
         Trace.WriteLine("Actual  : " + Hex.ToHexString(result));

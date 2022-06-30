@@ -1,41 +1,12 @@
 ﻿using Org.BouncyCastle.Crypto.Digests;
-using Org.BouncyCastle.Utilities.Encoders;
 
-namespace CaSessionUtilities;
+namespace CaSessionUtilities.Wrapping.Implementation;
 
-public static class Util
+public static class SessionMessagingWrapperKeyUtility
 {
-    public static byte[] pad(byte[] input, int blockSize) => input.GetPaddedArrayMethod2(blockSize);
-
-    //public static byte[] pad(byte[] input, int start, int len, int blockSize) =>
-    //    throw new Exception();  
-
-    public static string[] SplitEvery(this string thiz, int partLength)
-    {
-        if (thiz == null)
-            throw new ArgumentNullException(nameof(thiz));
-
-        if (partLength < 1)
-            throw new ArgumentException("Part length has to be positive.", nameof(partLength));
-
-        var result = new List<string>();
-
-        for (var i = 0; i < thiz.Length; i += partLength)
-            result.Add(thiz.Substring(i, Math.Min(partLength, thiz.Length - i)));
-
-        return result.ToArray();
-    }
-
-    public static string PrettyHexFormat(this byte[] thiz)
-        => string.Join("-", Hex.ToHexString(thiz).SplitEvery(16));
-
 
     public const int ENC_MODE = 1;
     public const int MAC_MODE = 2;
-
-    public static bool equalsIgnoreCase(this string thiz, string value) => thiz.Equals(value, StringComparison.InvariantCultureIgnoreCase);
-    public static bool startsWith(this string thiz, string value) => thiz.StartsWith(value, StringComparison.InvariantCultureIgnoreCase);
-    public static bool equals(this string thiz, string value) => thiz.equalsIgnoreCase(value);
 
 
     /**
@@ -52,7 +23,7 @@ public static class Util
      *
      * @throws GeneralSecurityException if something went wrong
      */
-    public static byte[] deriveKey(byte[] keySeed, string cipherAlg, int keyLength, int mode)
+    public static byte[] DeriveKey(byte[] keySeed, string cipherAlg, int keyLength, int mode)
     {
         var digest = getDigest(cipherAlg, keyLength);
         digest.BlockUpdate(keySeed, 0, keySeed.Length);
@@ -61,7 +32,7 @@ public static class Util
         digest.DoFinal(hashResult, 0);
 
         byte[] keyBytes = null;
-        if ("DESede".equalsIgnoreCase(cipherAlg) || "3DES".equalsIgnoreCase(cipherAlg))
+        if ("DESede".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "3DES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
         {
             /* TR-SAC 1.01, 4.2.1. */
             switch (keyLength)
@@ -77,7 +48,7 @@ public static class Util
                     throw new InvalidOperationException("DESede with 128-bit key length only");
             }
         }
-        else if ("AES".equalsIgnoreCase(cipherAlg) || cipherAlg.startsWith("AES"))
+        else if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || cipherAlg.StartsWith("AES", StringComparison.InvariantCultureIgnoreCase))
         {
             /* TR-SAC 1.01, 4.2.2. */
             switch (keyLength)
@@ -98,13 +69,13 @@ public static class Util
 
     private static GeneralDigest getDigest(string cipherAlg, int keyLength)
     {
-        if ("DESede".equals(cipherAlg) || "AES-128".equals(cipherAlg))
+        if ("DESede".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "AES-128".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
             return new Sha1Digest();
-        if ("AES".equals(cipherAlg) && keyLength == 128)
+        if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) && keyLength == 128)
             return new Sha1Digest();
-        if ("AES-256".equals(cipherAlg) || "AES-192".equals(cipherAlg))
+        if ("AES-256".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "AES-192".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
             return new Sha256Digest();
-        if ("AES".equals(cipherAlg) && (keyLength == 192 || keyLength == 256))
+        if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) && (keyLength == 192 || keyLength == 256))
             return new Sha256Digest();
 
         throw new InvalidOperationException("Unsupported cipher algorithm or key length.");

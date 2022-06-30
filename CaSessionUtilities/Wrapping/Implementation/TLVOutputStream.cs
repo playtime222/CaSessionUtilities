@@ -1,4 +1,4 @@
-﻿namespace CaSessionUtilities;
+﻿namespace CaSessionUtilities.Wrapping.Implementation;
 //package net.sf.scuba.tlv;
 
 //import java.io.DataOutputStream;
@@ -41,7 +41,7 @@ public class TLVOutputStream //extends OutputStream
     public TLVOutputStream(MemoryStream outputStream)
     {
         this.outputStream = outputStream;
-        this.state = new TLVOutputState();
+        state = new TLVOutputState();
     }
 
     /**
@@ -53,11 +53,9 @@ public class TLVOutputStream //extends OutputStream
      */
     public void writeTag(int tag)
     {
-        byte[] tagAsBytes = TLVUtil.getTagAsBytes(tag);
+        var tagAsBytes = TLVUtil.GetTagAsBytes(tag);
         if (state.canBeWritten())
-        {
             outputStream.Write(tagAsBytes);
-        }
         state.setTagProcessed(tag);
     }
 
@@ -70,12 +68,10 @@ public class TLVOutputStream //extends OutputStream
      */
     public void writeLength(int length)
     {
-        var lengthAsBytes = TLVUtil.getLengthAsBytes(length);
+        var lengthAsBytes = TLVUtil.GetLengthAsBytes(length);
         state.setLengthProcessed(length);
         if (state.canBeWritten())
-        {
             outputStream.Write(lengthAsBytes);
-        }
     }
 
     /**
@@ -152,18 +148,12 @@ public class TLVOutputStream //extends OutputStream
     public /*override*/ void write(byte[] bytes, int offset, int length)
     {
         if (state.getIsAtStartOfTag())
-        {
             throw new InvalidOperationException("Cannot write value bytes yet. Need to write a tag first.");
-        }
         if (state.getIsAtStartOfLength())
-        {
             state.setDummyLengthProcessed();
-        }
         state.updateValueBytesProcessed(bytes, offset, length);
         if (state.canBeWritten())
-        {
-            outputStream.write(bytes, offset, length);
-        }
+            outputStream.Write(bytes, offset, length);
     }
 
     /**
@@ -185,7 +175,7 @@ public class TLVOutputStream //extends OutputStream
         //int length = bufferedValueBytes.Length;
         //state.updatePreviousLength(length);
         //if (state.canBeWritten()) {
-        //    byte[] lengthAsBytes = TLVUtil.getLengthAsBytes(length);
+        //    byte[] lengthAsBytes = TLVUtil.GetLengthAsBytes(length);
         //    outputStream.write(lengthAsBytes);
         //    outputStream.write(bufferedValueBytes);
         //}

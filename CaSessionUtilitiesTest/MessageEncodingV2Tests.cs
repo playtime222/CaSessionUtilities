@@ -15,33 +15,37 @@ public class MessageEncodingV2Tests
     public void RoundTrip()
     {
         var messageContentArgs = new MessageContentArgs();
-        messageContentArgs.add(new FileArgs("argle", Encoding.UTF8.GetBytes("argle...")));
-        messageContentArgs.setUnencryptedNote("note");
+        messageContentArgs.Add(new FileArgs("argle", Encoding.UTF8.GetBytes("argle...")));
+        messageContentArgs.UnencryptedNote = "note";
 
-        var rdeSessionArgs = new RdeSessionArgs();
-        //TODO rdeSessionArgs.setCipher();
-
-        var encoder = new ZipMessageEncoder();
+        var rdeMessageDecryptionInfo = new RdeMessageDecryptionInfo
+        {
+            Command = "Now!",
+            PcdPublicKey = "01"
+        };
 
         var secretKey = new byte[32];
         new SecureRandom().NextBytes(secretKey);
 
-        var encoded = encoder.encode(messageContentArgs, rdeSessionArgs, secretKey);
+        var encoder = new ZipMessageEncoder();
+        var encoded = encoder.Encode(messageContentArgs, rdeMessageDecryptionInfo, secretKey);
 
         Trace.WriteLine("Secret Key      : " + Hex.ToHexString(secretKey));
-        Trace.WriteLine("IV              : " + rdeSessionArgs.iv);
         Trace.WriteLine("Encoded message : " + Hex.ToHexString(encoded));
         Trace.WriteLine("Length :        " + encoded.Length);
 
-
         var decoder = new ZipMessageDecoder();
-        var actualRdeSessionArgs = decoder.decodeRdeSessionArgs(encoded);
-        Assert.Equal(rdeSessionArgs.iv, actualRdeSessionArgs.iv);
+        var actualRdeSessionArgs = decoder.DecodeRdeSessionArgs(encoded);
+        Assert.Equal(rdeMessageDecryptionInfo.Command, actualRdeSessionArgs.RdeInfo.Command);
+        Assert.Equal(rdeMessageDecryptionInfo.PcdPublicKey, actualRdeSessionArgs.RdeInfo.PcdPublicKey);
+        Assert.Equal(16, Hex.Decode(actualRdeSessionArgs.Iv).Length);
 
-        var message = decoder.decode(secretKey);
-        Assert.Equal("note", message.getNote());
-        Assert.Equal("argle", message.getFiles()[0].getFilename());
-        Assert.Equal("argle...", Encoding.UTF8.GetString(message.getFiles()[0].getContent()));
+        //Pretend we threw the actualRdeSessionArgs at a phone and the MRTD
+
+        var message = decoder.Decode(secretKey);
+        Assert.Equal("note", message.Note);
+        Assert.Equal("argle", message.Files[0].Filename);
+        Assert.Equal("argle...", Encoding.UTF8.GetString(message.Files[0].Content));
     }
 
 
@@ -51,17 +55,17 @@ public class MessageEncodingV2Tests
     {
         File.WriteAllBytes("D:\\Fek.zip", Hex.Decode(encoded));
 
-        var rdeSessionArgs = new RdeSessionArgs();
+        var rdeSessionArgs = new MessageCipherInfo();
 
         var decoder = new ZipMessageDecoder();
-        var actualRdeSessionArgs = decoder.decodeRdeSessionArgs(Hex.Decode(encoded));
-        Assert.Equal("461571DE59D7E3835C93F14F7D148700", actualRdeSessionArgs.iv);
+        var actualRdeSessionArgs = decoder.DecodeRdeSessionArgs(Hex.Decode(encoded));
+        Assert.Equal("461571DE59D7E3835C93F14F7D148700", actualRdeSessionArgs.Iv);
 
         var buffer = Hex.Decode("BE0072912FB5A999C5EC3DF9253E3FB058200B8F621D5C402776CED6A925999B");
 
-        var message = decoder.decode(buffer);
-        Assert.Equal("note", message.getNote());
-        Assert.Equal("argle", message.getFiles()[0].getFilename());
-        Assert.Equal("argle...", Encoding.UTF8.GetString(message.getFiles()[0].getContent()));
+        var message = decoder.Decode(buffer);
+        Assert.Equal("note", message.Note);
+        Assert.Equal("argle", message.Files[0].Filename);
+        Assert.Equal("argle...", Encoding.UTF8.GetString(message.Files[0].Content));
     }
 }

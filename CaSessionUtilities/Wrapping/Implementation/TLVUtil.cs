@@ -1,8 +1,8 @@
-﻿namespace CaSessionUtilities;
+﻿namespace CaSessionUtilities.Wrapping.Implementation;
 
-public class TLVUtil
+public static class TLVUtil
 {
-    public static byte[] wrapDO(int tag, byte[] data /*encoded Le*/)
+    public static byte[] WrapDO(int tag, byte[] data /*encoded Le*/)
     {
         using var ms = new MemoryStream();
         var tlvOutputStream = new TLVOutputStream(ms);
@@ -13,31 +13,30 @@ public class TLVUtil
         return ms.ToArray();
     }
 
-    public static byte[] getLengthAsBytes(int length)
+    public static byte[] GetLengthAsBytes(int length)
     {
         var ms = new MemoryStream();
         if (length < 0x80)
-        {
             /* short form */
             ms.WriteByte((byte)length);
-        }
         else
-        {
-            int byteCount = log(length, 256);
+        {//Never called
+
+            var byteCount = CalculateLog(length, 256);
             ms.WriteByte((byte)(0x80 | byteCount));
-            for (int i = 0; i < byteCount; i++)
+            for (var i = 0; i < byteCount; i++)
             {
-                int pos = 8 * (byteCount - i - 1);
-                ms.WriteByte((byte)((length & (0xFF << pos)) >> pos));
+                var pos = 8 * (byteCount - i - 1);
+                ms.WriteByte((byte)((length & 0xFF << pos) >> pos));
             }
         }
         return ms.ToArray();
     }
 
-
-    private static int log(int n, int b)
+    //Never called
+    private static int CalculateLog(int n, int b)
     {
-        int result = 0;
+        var result = 0;
         while (n > 0)
         {
             n = n / b;
@@ -46,50 +45,45 @@ public class TLVUtil
         return result;
     }
 
-    public static byte[] getTagAsBytes(int tag)
+    public static byte[] GetTagAsBytes(int tag)
     {
         var ms = new MemoryStream();
-        int byteCount = (int)(Math.Log(tag) / Math.Log(256)) + 1;
-        for (int i = 0; i < byteCount; i++)
+        var byteCount = (int)(Math.Log(tag) / Math.Log(256)) + 1;
+        for (var i = 0; i < byteCount; i++)
         {
-            int pos = 8 * (byteCount - i - 1);
-            ms.WriteByte((byte)((tag & (0xFF << pos)) >> pos));
+            var pos = 8 * (byteCount - i - 1);
+            ms.WriteByte((byte)((tag & 0xFF << pos) >> pos));
         }
         var tagBytes = ms.ToArray();
-        switch (getTagClass(tag))
+        switch (GetTagClass(tag))
         {
             case ASN1Constants.APPLICATION_CLASS:
                 tagBytes[0] |= 0x40;
                 break;
-            case ASN1Constants.CONTEXT_SPECIFIC_CLASS:
+            case ASN1Constants.CONTEXT_SPECIFIC_CLASS: //Only ever this one
                 tagBytes[0] |= 0x80;
                 break;
             case ASN1Constants.PRIVATE_CLASS:
                 tagBytes[0] |= 0xC0;
                 break;
             default:
-                /* NOTE: Unsupported tag class. Now what? */
-                break;
+                throw new InvalidOperationException("Unsupported tag class.");
         }
-        if (!isPrimitive(tag))
-        {
+        if (!IsPrimitive(tag))
             tagBytes[0] |= 0x20;
-        }
         return tagBytes;
     }
 
-    static int getTagClass(int tag)
+    private static int GetTagClass(int tag)
     {
-        int i = 3;
+        var i = 3;
         for (; i >= 0; i--)
         {
-            int mask = (0xFF << (8 * i));
+            var mask = 0xFF << 8 * i;
             if ((tag & mask) != 0x00)
-            {
                 break;
-            }
         }
-        int msByte = (((tag & (0xFF << (8 * i))) >> (8 * i)) & 0xFF);
+        var msByte = (tag & 0xFF << 8 * i) >> 8 * i & 0xFF;
         switch (msByte & 0xC0)
         {
             case 0x00:
@@ -97,25 +91,23 @@ public class TLVUtil
             case 0x40:
                 return ASN1Constants.APPLICATION_CLASS;
             case 0x80:
-                return ASN1Constants.CONTEXT_SPECIFIC_CLASS;
+                return ASN1Constants.CONTEXT_SPECIFIC_CLASS; //Only ever this one
             case 0xC0:
             default:
                 return ASN1Constants.PRIVATE_CLASS;
         }
     }
 
-    public static bool isPrimitive(int tag)
+    private static bool IsPrimitive(int tag)
     {
-        int i = 3;
+        var i = 3;
         for (; i >= 0; i--)
         {
-            int mask = (0xFF << (8 * i));
+            var mask = 0xFF << 8 * i;
             if ((tag & mask) != 0x00)
-            {
                 break;
-            }
         }
-        int msByte = (((tag & (0xFF << (8 * i))) >> (8 * i)) & 0xFF);
-        return ((msByte & 0x20) == 0x00);
+        var msByte = (tag & 0xFF << 8 * i) >> 8 * i & 0xFF;
+        return (msByte & 0x20) == 0x00;
     }
 }

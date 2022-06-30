@@ -3,8 +3,8 @@ namespace CaSessionUtilities.Messaging;
 //TODO validation
 public class FileArgs
 {
-    private string name;
-    private byte[] content;
+    public string Name { get; set; }
+    public byte[] Content { get; set; }
 
     public FileArgs()
     {
@@ -12,28 +12,8 @@ public class FileArgs
 
     public FileArgs(string name, byte[] content)
     {
-        this.name = name;
-        this.content = content;
-    }
-
-    public string getName()
-    {
-        return name;
-    }
-
-    public void setName(string name)
-    {
-        this.name = name;
-    }
-
-    public byte[] getContent()
-    {
-        return content;
-    }
-
-    public void setContent(byte[] content)
-    {
-        this.content = content;
+        Name = name;
+        Content = content;
     }
 
     //TODO MimeType?

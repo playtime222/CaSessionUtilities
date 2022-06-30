@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using Newtonsoft.Json;
@@ -6,6 +7,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilities.Messaging.zipV2;
+
 
 public sealed class ZipMessageEncoder : IMessageEncoder
 {
@@ -24,94 +26,96 @@ public sealed class ZipMessageEncoder : IMessageEncoder
     public static string MetadataGmacEntryName = "AT_4";
 
     //private Gson gson = new Gson();
-    private byte[] secretKey;
-    private byte[] iv;
+    private byte[] _SecretKey;
+    private byte[] _Iv;
 
-    private MemoryStream result;
-    private ZipArchive zipStream;
+    private MemoryStream _Result;
+    private ZipArchive _ZipStream;
 
     public ZipMessageEncoder()
     {
     }
 
-    private byte[] generateIv() {
+    /// <summary>
+    /// TODO decouple from cipher
+    /// </summary>
+    /// <returns></returns>
+    private byte[] GenerateIv() {
         var result = new byte[16];
         new SecureRandom().NextBytes(result);
-        this.iv = result;
+        _Iv = result;
         return result;
     }
 
-    private int fileCounter = 4; //-> First one is R_5_1
-    //TODO private int filePartCounter...
-    private string nextEntryName() {fileCounter++; return string.Format("R_{0}_1", fileCounter);}
-    private string gmacEntryName() {return string.Format("A_{0}", fileCounter);}
+    private int _FileCounter = 4; //-> First one is R_5_1
+
+    public static string GetEntryName(int fileCounter) => string.Format(CultureInfo.InvariantCulture, "R_{0}_1", fileCounter);
+    public static string GetMacEntryName(int fileCounter) => string.Format(CultureInfo.InvariantCulture, "A_{0}", fileCounter);
+
+    private string GetNextEntryName() => GetEntryName(++_FileCounter);
+    private string GetMacEntryName() => GetMacEntryName(_FileCounter);
 
     //TODO version marker entry
-    public byte[] encode(MessageContentArgs messageArgs, RdeSessionArgs rdeSessionArgs, byte[] secretKey)
+    public byte[] Encode(MessageContentArgs messageArgs, RdeMessageDecryptionInfo rdeSessionArgs, byte[] secretKey)
     {
-        this.secretKey = secretKey;
-        rdeSessionArgs.iv = Hex.ToHexString(generateIv());
-        //messageCipher = CipherUtilities.GetCipher("AES/CBC/PKCS5Padding");
-        //messageCipher.Init(true, secretKey, new IvParameterSpec(rdeSessionArgs.getIv()));
+        MessageCipherInfo args = new();
 
-        using (result = new MemoryStream())
-        using (zipStream = new ZipArchive(result, ZipArchiveMode.Create, true, Encoding.UTF8))
+        this._SecretKey = secretKey;
+        args.Iv = Hex.ToHexString(GenerateIv());
+        args.RdeInfo = rdeSessionArgs;
+
+        using (_Result = new MemoryStream())
+        using (_ZipStream = new ZipArchive(_Result, ZipArchiveMode.Create, true, Encoding.UTF8))
         {
 
-            writePlain(VersionEntryName, VersionGmacEntryName, Encoding.UTF8.GetBytes(Version));
-            writePlain(NoteEntryName, NoteGmacEntryName, Encoding.UTF8.GetBytes(messageArgs.getUnencryptedNote()));
-            var json = JsonConvert.SerializeObject(rdeSessionArgs);
-            writePlain(RdeSessionArgsEntryName, RdeSessionArgsGmacEntryName, Encoding.UTF8.GetBytes(json));
+            WritePlain(VersionEntryName, VersionGmacEntryName, Encoding.UTF8.GetBytes(Version));
+            WritePlain(NoteEntryName, NoteGmacEntryName, Encoding.UTF8.GetBytes(messageArgs.UnencryptedNote));
+            var json = JsonConvert.SerializeObject(args);
+            WritePlain(RdeSessionArgsEntryName, RdeSessionArgsGmacEntryName, Encoding.UTF8.GetBytes(json));
 
             var filenames = new List<string>();
-            for (var i = 0; i < messageArgs.getFileArgs().Length; i++)
+            for (var i = 0; i < messageArgs.FileArgs.Length; i++)
             {
-                var item = messageArgs.getFileArgs()[i];
-                filenames.Add(item.getName());
-                writeEncrypted(item.getContent());
+                var item = messageArgs.FileArgs[i];
+                filenames.Add(item.Name);
+                WriteEncrypted(item.Content);
             }
 
             var metadata = new Metadata();
             var v = filenames.ToArray();
             metadata.Filenames = v;
-            writeEncrypted(MetadataEntryName, MetadataGmacEntryName, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(metadata)));
+            WriteEncrypted(MetadataEntryName, MetadataGmacEntryName, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(metadata)));
         }
-        result.Flush();
-        return result.ToArray();
+        _Result.Flush();
+        return _Result.ToArray();
     }
 
-    //public void Dispose() 
-    //{
-    //    zipStream?.Dispose();
-    //    result?.Dispose();
-    //}
-
-    private void writePlain(string entryName, string gmacEntryName, byte[] content)
+    private void WritePlain(string entryName, string gmacEntryName, byte[] content)
     {
-        write(entryName, content);
-        writeGmac(gmacEntryName, content);
+        Write(entryName, content);
+        WriteGmac(gmacEntryName, content);
     }
 
-    private void writeEncrypted(byte[] content) 
+    private void WriteEncrypted(byte[] content) 
     {
-        var e = nextEntryName();
-        writeEncrypted(e, gmacEntryName(), content);
+        var e = GetNextEntryName();
+        WriteEncrypted(e, GetMacEntryName(), content);
     }
 
-    private void writeEncrypted(string entryName, string gmacEntryName, byte[] content) 
+    private void WriteEncrypted(string entryName, string gmacEntryName, byte[] content) 
     {
-        write(entryName, Crypto.getAESCBCPKCS5PaddingCipherText(this.secretKey, this.iv, content));
-        writeGmac(gmacEntryName, content);
+        Write(entryName, Crypto.GetAesCbcPkcs5PaddingCipherText(this._SecretKey, this._Iv, content));
+        WriteGmac(gmacEntryName, content);
     }
 
-    private void writeGmac(string entryName, byte[] content)
+    private void WriteGmac(string entryName, byte[] content)
     {
-        write(entryName, Crypto.getAesGMac(secretKey,iv,content));
+        Write(entryName, Crypto.GetAesGMac(_SecretKey,_Iv,content));
     }
 
-    private void write(string entryName, byte[] content) 
+    private void Write(string entryName, byte[] content) 
     {
-        var entry = zipStream.CreateEntry(entryName);
+        var entry = _ZipStream.CreateEntry(entryName);
         //zipStream.putNextEntry(entry);
         using var stream = entry.Open();
         stream.Write(content);

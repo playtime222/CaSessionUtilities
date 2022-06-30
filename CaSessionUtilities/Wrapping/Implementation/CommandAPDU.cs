@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Utilities;
 
-namespace CaSessionUtilities
+namespace CaSessionUtilities.Wrapping.Implementation
 {
 
     /**
@@ -64,12 +64,12 @@ namespace CaSessionUtilities
 
         private void checkArrayBounds(byte[] b, int ofs, int len)
         {
-            if ((ofs < 0) || (len < 0))
+            if (ofs < 0 || len < 0)
                 throw new ArgumentException("Offset and length must not be negative");
 
             if (b == null)
             {
-                if ((ofs != 0) && (len != 0))
+                if (ofs != 0 && len != 0)
                     throw new ArgumentException("offset and length must be 0 if array is null");
             }
             else
@@ -310,7 +310,7 @@ namespace CaSessionUtilities
                 else
                 {
                     // case 4s or 4e
-                    if ((dataLength <= 255) && (ne <= 256))
+                    if (dataLength <= 255 && ne <= 256)
                     {
                         // case 4s
                         _Content = new byte[4 + 2 + dataLength];
@@ -318,7 +318,7 @@ namespace CaSessionUtilities
                         _Content[4] = (byte)dataLength;
                         _DataOffset = 5;
                         Array.Copy(data, dataOffset, _Content, 5, dataLength);
-                        _Content[^1] = (byte)((ne != 256) ? ne : 0);
+                        _Content[^1] = (byte)(ne != 256 ? ne : 0);
                     }
                     else
                     {
@@ -332,7 +332,7 @@ namespace CaSessionUtilities
                         Array.Copy(data, dataOffset, _Content, 7, dataLength);
                         if (ne != 65536)
                         {
-                            int leOfs = _Content.Length - 2;
+                            var leOfs = _Content.Length - 2;
                             _Content[leOfs] = (byte)(ne >> 8);
                             _Content[leOfs + 1] = (byte)ne;
                         } // else le == 65536: no need to fill in, encoded as 0
