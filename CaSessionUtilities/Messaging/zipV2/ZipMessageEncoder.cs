@@ -2,11 +2,10 @@ using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 
-namespace CaSessionUtilities.Messaging.zipV2;
+namespace CaSessionUtilities.Messaging.ZipV2;
 
 
 public sealed class ZipMessageEncoder : IMessageEncoder

@@ -1,4 +1,4 @@
-namespace CaSessionUtilities.Messaging.zipV2;
+namespace CaSessionUtilities.Messaging.ZipV2;
 
 public class Metadata 
 {
