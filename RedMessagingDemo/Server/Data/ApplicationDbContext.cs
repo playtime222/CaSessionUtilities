@@ -13,5 +13,8 @@ namespace RedMessagingDemo.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Document> Documents { get; set; }
     }
 }
