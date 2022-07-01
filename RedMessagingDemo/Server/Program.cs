@@ -26,6 +26,8 @@ namespace RedMessagingDemo
             builder.Services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
+            builder.Services.AddApiAuthorization();
+
             builder.Services.AddAuthentication()
                 .AddIdentityServerJwt();
 
