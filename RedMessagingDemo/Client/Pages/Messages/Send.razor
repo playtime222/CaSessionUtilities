@@ -1,0 +1,104 @@
+﻿@page "/send"
+@using CaSessionUtilities
+@using Microsoft.AspNetCore.Authorization
+@using RedMessagingDemo.Shared
+@using CaSessionUtilities.Messaging;
+@using CaSessionUtilities.Messaging.ZipV2;
+@using RedMessagingDemo.Client.Extras;
+@using Org.BouncyCastle.Utilities.Encoders;
+@using Newtonsoft.Json
+@attribute [Authorize]
+@inject HttpClient _HttpClient
+
+<h3>Send</h3>
+
+@if (_Receivers == null || _Receivers.Items.Length == 0)
+{
+    <p>No receivers. Cannot send.</p>
+}
+else
+{
+
+    <EditForm Model="@_MessageSendArgs" OnValidSubmit="@SendMessage">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <InputSelect id="_Receiver" @bind-Value="_MessageSendArgs.Receiver">
+            @foreach (var i in _Receivers.Items)
+            {
+                <option value="@i.Id">@($"{i.EmailAddress}, {i.DisplayName}")</option>
+            }
+        </InputSelect>
+        <InputText id="_Note" @bind-Value="_MessageSendArgs.Note" />
+
+        <InputFile></InputFile>
+        <InputFile></InputFile>
+
+        <button type="submit">Send</button>
+    </EditForm>
+
+}
+
+
+@code {
+
+    public class FormSendArgs
+    {
+        public long Receiver { get; set; }
+        public string Note { get; set; }
+    }
+
+    private ReceiverDocumentList _Receivers;
+
+    private FormSendArgs _MessageSendArgs = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _Receivers = await _HttpClient.GetFromJsonAsync<ReceiverDocumentList>("/api/documents/receivers");
+    }
+
+    private async Task SendMessage()
+    {
+        //Get message receiver
+        var document = await _HttpClient.GetFromJsonAsync<ReceiverDocument>($"/api/documents/receivers/{_MessageSendArgs.Receiver}");
+
+        //TODO view model - barf on doc not found.
+
+        //Use of library - start
+        var rdeSessionArgs = new RdeMessageCreateArgs()
+            {
+                CaSessionArgs = document.CaSessionArgs.ToCaSessionArgs(),
+                FileContent = Base64.Decode(document.FileContentBase64),
+                FileShortId = document.FileShortId,
+                ReadLength = document.ReadLength,
+            };
+
+        var rdeMessageParameters = new CreateRdeMessageParametersCommand().Execute(rdeSessionArgs);
+        var secretKey = Crypto.GetAes256SecretKeyFromResponse(rdeMessageParameters.WrappedResponse);
+
+        var messageArgs = new MessageContentArgs()
+            {
+                UnencryptedNote = _MessageSendArgs.Note
+            };
+
+        //messageArgs.Add()
+
+        var rdeMessageDecryptionInfo = new RdeMessageDecryptionInfo()
+            {
+                PcdPublicKey = Hex.ToHexString(rdeMessageParameters.EphemeralPublicKey),
+                Command = Hex.ToHexString(rdeMessageParameters.WrappedCommand),
+            };
+
+        var message = new ZipMessageEncoder().Encode(messageArgs, rdeMessageDecryptionInfo, secretKey);
+        //Use of library - end
+
+        var sendArgs = new MessageSendArgs
+            {
+                Receiver = _MessageSendArgs.Receiver,
+                MessageBase64 = Base64.ToBase64String(message),
+                Note = _MessageSendArgs.Note,
+            };
+
+        await _HttpClient.PostAsJsonAsync("/api/messages/send", sendArgs);
+    }
+}

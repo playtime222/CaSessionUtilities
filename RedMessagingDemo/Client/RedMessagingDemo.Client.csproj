@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CaSessionUtilities\CaSessionUtilities.csproj" />
     <ProjectReference Include="..\Shared\RedMessagingDemo.Shared.csproj" />
   </ItemGroup>
 

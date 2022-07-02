@@ -1,9 +1,6 @@
-﻿namespace CaSessionUtilities;
+﻿namespace RedMessagingDemo.Shared;
 
-/// <summary>
-/// From enrolment, specifically DG14
-/// </summary>
-public record CaSessionArgs
+public record ChipAuthenticationProtocolInfo
 {
     //caSessionArgs.getCaPublicKeyInfo().getKeyId(),
     //caSessionArgs.getCaPublicKeyInfo().getObjectIdentifier(),

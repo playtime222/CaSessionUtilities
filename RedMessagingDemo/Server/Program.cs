@@ -20,7 +20,8 @@ namespace RedMessagingDemo
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services
+                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddIdentityServer()
@@ -33,6 +34,17 @@ namespace RedMessagingDemo
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            builder.Services.AddSwaggerGen(options => 
+                options.AddSecurityDefinition("oauth2", 
+                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+                }
+                ));
 
             var app = builder.Build();
 
@@ -64,6 +76,12 @@ namespace RedMessagingDemo
             app.MapRazorPages();
             app.MapControllers();
             app.MapFallbackToFile("index.html");
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
 
             app.Run();
         }

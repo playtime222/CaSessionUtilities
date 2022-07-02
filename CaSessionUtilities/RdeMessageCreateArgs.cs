@@ -7,11 +7,11 @@
 public record RdeMessageCreateArgs
 {
     public CaSessionArgs CaSessionArgs { get; init; }
-    public byte FileShortId { get; init; }
+    public int FileShortId { get; init; }
     public byte[] FileContent { get; init; }
 
     /// <summary>
     /// Max is 256 cos max transceive length
     /// </summary>
-    public byte ReadLength { get; init; }
+    public int ReadLength { get; init; }
 }

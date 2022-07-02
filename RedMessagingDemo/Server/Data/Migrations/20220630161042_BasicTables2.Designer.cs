@@ -395,7 +395,7 @@ namespace RedMessagingDemo.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FileContents")
+                    b.Property<string>("FileContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
