@@ -44,7 +44,7 @@ public class CommandEncoderTests
         var wrapper = new AesSecureMessagingWrapper(Hex.Decode(ksEncString), Hex.Decode(ksMacString));
         var wrapped = new CommandEncoder(wrapper).Encode(plainApdu);
 
-        Trace.WriteLine("data      : " + wrapped.getData().PrettyHexFormat());
+        Trace.WriteLine("data      : " + wrapped.GetData().PrettyHexFormat());
 
         var actual = wrapped.ToArray();
 

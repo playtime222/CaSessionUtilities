@@ -8,22 +8,6 @@ public static class SessionMessagingWrapperKeyUtility
     public const int ENC_MODE = 1;
     public const int MAC_MODE = 2;
 
-
-    /**
-     * Derives a shared key.
-     *
-     * @param keySeed the shared secret, as octets
-     * @param cipherAlg in Java mnemonic notation (for example "DESede", "AES")
-     * @param keyLength length in bits
-     * @param nonce optional nonce or <code>null</code>
-     * @param mode the mode either {@code ENC}, {@code MAC}, or {@code PACE} mode
-     * @param paceKeyReference Key Reference For Pace Protocol
-     *
-     * @return the derived key
-     *
-     * @throws GeneralSecurityException if something went wrong
-     */
-
     public static byte[] DeriveKey(byte[] keySeed, ChipAuthenticationCipherInfo cipherInfo, int mode)
         => DeriveKey(keySeed, cipherInfo.Algorithm, cipherInfo.KeyLength, mode);
     private static byte[] DeriveKey(byte[] keySeed, string cipherAlg, int keyLength, int mode)
@@ -75,6 +59,7 @@ public static class SessionMessagingWrapperKeyUtility
             return new Sha1Digest();
         if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) && keyLength == 128)
             return new Sha1Digest();
+
         if ("AES-256".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "AES-192".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
             return new Sha256Digest();
         if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) && (keyLength == 192 || keyLength == 256))

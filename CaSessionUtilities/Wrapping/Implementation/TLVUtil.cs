@@ -57,15 +57,15 @@ public static class TLVUtil
         var tagBytes = ms.ToArray();
         switch (GetTagClass(tag))
         {
-            case ASN1Constants.APPLICATION_CLASS:
-                tagBytes[0] |= 0x40;
-                break;
+            //case ASN1Constants.APPLICATION_CLASS:
+            //    tagBytes[0] |= 0x40;
+            //    break;
             case ASN1Constants.CONTEXT_SPECIFIC_CLASS: //Only ever this one
                 tagBytes[0] |= 0x80;
                 break;
-            case ASN1Constants.PRIVATE_CLASS:
-                tagBytes[0] |= 0xC0;
-                break;
+            //case ASN1Constants.PRIVATE_CLASS:
+            //    tagBytes[0] |= 0xC0;
+            //    break;
             default:
                 throw new InvalidOperationException("Unsupported tag class.");
         }
@@ -86,15 +86,16 @@ public static class TLVUtil
         var msByte = (tag & 0xFF << 8 * i) >> 8 * i & 0xFF;
         switch (msByte & 0xC0)
         {
-            case 0x00:
-                return ASN1Constants.UNIVERSAL_CLASS;
-            case 0x40:
-                return ASN1Constants.APPLICATION_CLASS;
+            //case 0x00:
+            //    return ASN1Constants.UNIVERSAL_CLASS;
+            //case 0x40:
+            //    return ASN1Constants.APPLICATION_CLASS;
             case 0x80:
                 return ASN1Constants.CONTEXT_SPECIFIC_CLASS; //Only ever this one
             case 0xC0:
             default:
-                return ASN1Constants.PRIVATE_CLASS;
+                //return ASN1Constants.PRIVATE_CLASS;
+                throw new InvalidOperationException();
         }
     }
 

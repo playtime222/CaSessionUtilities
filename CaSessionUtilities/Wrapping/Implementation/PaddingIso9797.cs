@@ -35,7 +35,7 @@ public static class PaddingIso9797
     public static byte[] GetPaddedArrayMethod1(this byte[] input, int blockSize)
         => SizeAlignsWithBlockSize(input.Length, blockSize) ? input : input.GetPaddedArrayMethod2(blockSize);
 
-    public static int GetPaddedLengthMethod1(int inputSize, int blockSize) => (inputSize + blockSize) / blockSize * blockSize;
+    private static int GetPaddedLengthMethod1(int inputSize, int blockSize) => (inputSize + blockSize) / blockSize * blockSize;
 
-    public static bool SizeAlignsWithBlockSize(int inputSize, int blockSize) => GetPaddedLengthMethod1(inputSize, blockSize) == inputSize;
+    private static bool SizeAlignsWithBlockSize(int inputSize, int blockSize) => GetPaddedLengthMethod1(inputSize, blockSize) == inputSize;
 }

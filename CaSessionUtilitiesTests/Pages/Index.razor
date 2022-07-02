@@ -57,7 +57,7 @@
         var wrapper = new AesSecureMessagingWrapper(Hex.Decode(ksEncString), Hex.Decode(ksMacString));
         var wrapped = new CommandEncoder(wrapper).Encode(plainApdu); //, 1
 
-        sb.AppendLine("data      : " + wrapped.getData().PrettyHexFormat());
+        sb.AppendLine("data      : " + wrapped.GetData().PrettyHexFormat());
 
         var actual = wrapped.ToArray();
 

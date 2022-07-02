@@ -1,50 +1,7 @@
 ﻿namespace CaSessionUtilities.Wrapping.Implementation
 {
-    /*
-     * This file is part of the SCUBA smart card framework.
-     *
-     * This library is free software; you can redistribute it and/or
-     * modify it under the terms of the GNU Lesser General Public
-     * License as published by the Free Software Foundation; either
-     * version 2.1 of the License, or (at your option) any later version.
-     *
-     * This library is distributed in the hope that it will be useful,
-     * but WITHOUT ANY WARRANTY; without even the implied warranty of
-     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-     * Lesser General Public License for more details.
-     *
-     * You should have received a copy of the GNU Lesser General Public
-     * License along with this library; if not, write to the Free Software
-     * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-     *
-     * Copyright (C) 2009 - 2018  The SCUBA team.
-     *
-     * $Id: TLVOutputState.java 320 2020-09-22 19:43:54Z martijno $
-     */
-
-    //package net.sf.scuba.tlv;
-
-    //import java.io.ByteArrayOutputStream;
-    //import java.io.IOException;
-    //import java.util.ArrayDeque;
-    //import java.util.Deque;
-    //import java.util.logging.Level;
-    //import java.util.logging.Logger;
-
-    //import net.sf.scuba.util.Hex;
-
-    /**
-     * State to keep track of where we are in a TLV stream.
-     * This variant also stores values that were encountered, to be used in
-     * {@link TLVOutputStream}.
-     *
-     * @author Martijn Oostdijk (martijn.oostdijk@gmail.com)
-     *
-     * @version $Revision: 320 $
-     */
     class TLVOutputState
     {
-
         ///**
         // * Encoded the tags, lengths, and (partial) values.
         // */
@@ -155,9 +112,6 @@
             isReadingValue = false;
         }
 
-        /**
-         * We've passed the length in the stream, but we don't know what it is yet...
-         */
         public void setDummyLengthProcessed()
         {
             isAtStartOfTag = false;
