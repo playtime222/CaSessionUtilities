@@ -312,10 +312,6 @@ namespace RedMessagingDemo.Server.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DocumentEnrollmentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -404,6 +400,7 @@ namespace RedMessagingDemo.Server.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -429,6 +426,7 @@ namespace RedMessagingDemo.Server.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("FromUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Note")
@@ -502,7 +500,9 @@ namespace RedMessagingDemo.Server.Data.Migrations
                 {
                     b.HasOne("RedMessagingDemo.Server.Models.ApplicationUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Owner");
                 });
@@ -517,7 +517,9 @@ namespace RedMessagingDemo.Server.Data.Migrations
 
                     b.HasOne("RedMessagingDemo.Server.Models.ApplicationUser", "FromUser")
                         .WithMany()
-                        .HasForeignKey("FromUserId");
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Document");
 
