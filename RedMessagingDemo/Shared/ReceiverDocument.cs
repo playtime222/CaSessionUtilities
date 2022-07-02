@@ -1,5 +1,9 @@
 ﻿namespace RedMessagingDemo.Shared;
 
+
+/// <summary>
+/// AKA RDE Certificate contents
+/// </summary>
 public record ReceiverDocument
 {
     public CaSessionArgs CaSessionArgs { get; init; }

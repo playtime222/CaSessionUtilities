@@ -21,7 +21,7 @@ namespace RedMessagingDemo.Server.Controllers
         {
             var items = db.Messages
                 .Where(x => x.Document.Owner.Id == this.GetUserId())
-                .Select(x => new ReceivedMessage { Id = x.Id, Note= x.Note, SenderEmail = x.FromUser.Email, WhenSent = x.WhenSent})
+                .Select(x => new ReceivedMessageListItem { Id = x.Id, Note= x.Note, SenderEmail = x.FromUser.Email, WhenSent = x.WhenSent})
                 .ToArray();
 
             return new ReceivedMessageList()
@@ -40,19 +40,19 @@ namespace RedMessagingDemo.Server.Controllers
         //Document enrolment result
         // POST api/<DocumentsController>
         [HttpPost("send")]
-        public async Task Post([FromServices] ApplicationDbContext db, [FromBody] MessageSendArgs messageArgs)
+        public async Task Post([FromServices] ApplicationDbContext db, [FromBody] MessageSendRequestArgs messageRequestArgs)
         {
 
             var sender = await db.ApplicationUsers.FindAsync(this.GetUserId());
-            var receiver = await db.Documents.FindAsync(messageArgs.Receiver);
+            var receiver = await db.Documents.FindAsync(messageRequestArgs.Receiver);
 
             var msg = new Models.Message()
             {
                 Document = receiver,
-                Content = Base64.Decode(messageArgs.MessageBase64),
+                Content = Base64.Decode(messageRequestArgs.MessageBase64),
                 FromUser = sender,
                 WhenSent = DateTime.Now,
-                Note = messageArgs.Note
+                Note = messageRequestArgs.Note
             };
 
             await db.Messages.AddAsync(msg);

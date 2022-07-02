@@ -1,31 +1,51 @@
 ﻿namespace CaSessionUtilities.Wrapping.Implementation;
 
+
+
+public class ChipAuthenticationCipherInfo
+{
+    //public enum Alg
+    //{
+    //    Aes,
+    //    DeSede
+    //}
+
+    public ChipAuthenticationCipherInfo(string algorithm, int keyLength)
+    {
+        Algorithm = algorithm;
+        KeyLength = keyLength;
+    }
+
+    public string Algorithm { get; }
+    public int KeyLength { get; }
+}
+
 public static class ChipAuthenticationInfo
 {
 
-    //  /** Used in Chip Authentication 1 and 2. */
-    public const string ID_CA_DH_3DES_CBC_CBC = "0.4.0.127.0.7.2.2.2"; // EACObjectIdentifiers.id_CA_DH_3DES_CBC_CBC.getId();
+    public static ChipAuthenticationCipherInfo Find(string oid)
+        => _CipherInfo.TryGetValue(oid, out var result) ? result : throw new InvalidOperationException("Unsupported OID.");
 
-    ///** Used in Chip Authentication 1 and 2. */
-    public const string ID_CA_ECDH_3DES_CBC_CBC = "0.4.0.127.0.7.2.2.3.2.1 "; // EACObjectIdentifiers.id_CA_ECDH_3DES_CBC_CBC.getId();
+    private readonly static Dictionary<string, ChipAuthenticationCipherInfo> _CipherInfo = new()
+    {
+        {ID_CA_DH_3DES_CBC_CBC, new("DESede",128) },
+        {ID_CA_ECDH_3DES_CBC_CBC , new("DESede",128) },
+        {ID_CA_DH_AES_CBC_CMAC_128 , new("AES",128) },
+        {ID_CA_DH_AES_CBC_CMAC_192 , new("AES",192) },
+        {ID_CA_DH_AES_CBC_CMAC_256 , new("AES",256) },
+        {ID_CA_ECDH_AES_CBC_CMAC_128, new("AES",128) },
+        {ID_CA_ECDH_AES_CBC_CMAC_192, new("AES",192) },
+        {ID_CA_ECDH_AES_CBC_CMAC_256, new("AES",256) },
+    };
 
-    /** Used in Chip Authentication 1 and 2. */
-    public const string ID_CA_DH_AES_CBC_CMAC_128 = "0.4.0.127.0.7.2.2.3.1.2";
-    /** Used in Chip Authentication 1 and 2. */
-
-    public const string ID_CA_DH_AES_CBC_CMAC_192 = "0.4.0.127.0.7.2.2.3.1.3";
-
-    /** Used in Chip Authentication 1 and 2. */
-    public const string ID_CA_DH_AES_CBC_CMAC_256 = "0.4.0.127.0.7.2.2.3.1.4";
-
-    /** Used in Chip Authentication 1 and 2. */
-    public const string ID_CA_ECDH_AES_CBC_CMAC_128 = "0.4.0.127.0.7.2.2.3.2.2";
-
-    /** Used in Chip Authentication 1 and 2. */
-    public const string ID_CA_ECDH_AES_CBC_CMAC_192 = "0.4.0.127.0.7.2.2.3.2.3";
-
-    /** Used in Chip Authentication 1 and 2. */
-    public const string ID_CA_ECDH_AES_CBC_CMAC_256 = "0.4.0.127.0.7.2.2.3.2.4";
+    private const string ID_CA_DH_3DES_CBC_CBC =       "0.4.0.127.0.7.2.2.2";
+    private const string ID_CA_ECDH_3DES_CBC_CBC =     "0.4.0.127.0.7.2.2.3.2.1 ";
+    private const string ID_CA_DH_AES_CBC_CMAC_128 =   "0.4.0.127.0.7.2.2.3.1.2";
+    private const string ID_CA_DH_AES_CBC_CMAC_192 =   "0.4.0.127.0.7.2.2.3.1.3";
+    private const string ID_CA_DH_AES_CBC_CMAC_256 =   "0.4.0.127.0.7.2.2.3.1.4";
+    private const string ID_CA_ECDH_AES_CBC_CMAC_128 = "0.4.0.127.0.7.2.2.3.2.2";
+    private const string ID_CA_ECDH_AES_CBC_CMAC_192 = "0.4.0.127.0.7.2.2.3.2.3";
+    private const string ID_CA_ECDH_AES_CBC_CMAC_256 = "0.4.0.127.0.7.2.2.3.2.4";
 
     public static string toCipherAlgorithm(string oid)
     {

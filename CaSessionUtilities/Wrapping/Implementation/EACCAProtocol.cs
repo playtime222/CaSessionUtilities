@@ -71,17 +71,16 @@ public class EACCAProtocol
 
     private static SecureMessagingWrapper RestartSecureMessaging(string oid, byte[] sharedSecret)
     {
-        var cipherAlg = ChipAuthenticationInfo.toCipherAlgorithm(oid);
-        var keyLength = ChipAuthenticationInfo.toKeyLength(oid);
+        var cipherInfo = ChipAuthenticationInfo.Find(oid);
 
         /* Start secure messaging. */
-        var ksEnc = SessionMessagingWrapperKeyUtility.DeriveKey(sharedSecret, cipherAlg, keyLength, SessionMessagingWrapperKeyUtility.ENC_MODE);
-        var ksMac = SessionMessagingWrapperKeyUtility.DeriveKey(sharedSecret, cipherAlg, keyLength, SessionMessagingWrapperKeyUtility.MAC_MODE);
+        var ksEnc = SessionMessagingWrapperKeyUtility.DeriveKey(sharedSecret, cipherInfo, SessionMessagingWrapperKeyUtility.ENC_MODE);
+        var ksMac = SessionMessagingWrapperKeyUtility.DeriveKey(sharedSecret, cipherInfo, SessionMessagingWrapperKeyUtility.MAC_MODE);
 
-        if (cipherAlg.StartsWith("DESede"))
+        if (cipherInfo.Algorithm.StartsWith("DESede"))
             return new DESedeSecureMessagingWrapper(ksEnc, ksMac);
 
-        if (cipherAlg.StartsWith("AES"))
+        if (cipherInfo.Algorithm.StartsWith("AES"))
             return new AesSecureMessagingWrapper(ksEnc, ksMac);
 
         throw new InvalidOperationException("Unsupported cipher algorithm.");

@@ -23,7 +23,10 @@ public static class SessionMessagingWrapperKeyUtility
      *
      * @throws GeneralSecurityException if something went wrong
      */
-    public static byte[] DeriveKey(byte[] keySeed, string cipherAlg, int keyLength, int mode)
+
+    public static byte[] DeriveKey(byte[] keySeed, ChipAuthenticationCipherInfo cipherInfo, int mode)
+        => DeriveKey(keySeed, cipherInfo.Algorithm, cipherInfo.KeyLength, mode);
+    private static byte[] DeriveKey(byte[] keySeed, string cipherAlg, int keyLength, int mode)
     {
         var digest = getDigest(cipherAlg, keyLength);
         digest.BlockUpdate(keySeed, 0, keySeed.Length);
@@ -31,7 +34,6 @@ public static class SessionMessagingWrapperKeyUtility
         var hashResult = new byte[digest.GetDigestSize()];
         digest.DoFinal(hashResult, 0);
 
-        byte[] keyBytes = null;
         if ("DESede".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "3DES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
         {
             /* TR-SAC 1.01, 4.2.1. */
@@ -39,7 +41,7 @@ public static class SessionMessagingWrapperKeyUtility
             {
                 case 112:
                 case 128:
-                    keyBytes = new byte[24];
+                    var keyBytes = new byte[24];
                     Array.Copy(hashResult, 0, keyBytes, 0, 8); /* E  (octets 1 to 8) */
                     Array.Copy(hashResult, 8, keyBytes, 8, 8); /* D  (octets 9 to 16) */
                     Array.Copy(hashResult, 0, keyBytes, 16, 8); /* E (again octets 1 to 8, i.e. 112-bit 3DES key) */
@@ -56,15 +58,15 @@ public static class SessionMessagingWrapperKeyUtility
                 case 128:
                 case 192:
                 case 256:
-                    keyBytes = new byte[keyLength / 8]; /* NOTE: 256 = 32 * 8 */
-                    Array.Copy(hashResult, 0, keyBytes, 0, keyLength / 8);
+                    var keyBytes = new byte[keyLength / 8]; /* NOTE: 256 = 32 * 8 */
+                    Array.Copy(hashResult, 0, keyBytes, 0, keyBytes.Length);
                     return keyBytes;
                 default:
                     throw new InvalidOperationException("KDF can only use AES with 128-bit, 192-bit key or 256-bit length");
             }
         }
 
-        return keyBytes;
+        throw new InvalidOperationException();
     }
 
     private static GeneralDigest getDigest(string cipherAlg, int keyLength)

@@ -92,7 +92,7 @@ else
         var message = new ZipMessageEncoder().Encode(messageArgs, rdeMessageDecryptionInfo, secretKey);
         //Use of library - end
 
-        var sendArgs = new MessageSendArgs
+        var sendArgs = new MessageSendRequestArgs
             {
                 Receiver = _MessageSendArgs.Receiver,
                 MessageBase64 = Base64.ToBase64String(message),

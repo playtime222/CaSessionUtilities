@@ -2,5 +2,5 @@
 
 public class ReceivedMessageList
 {
-    public ReceivedMessage[] Items { get; set; }
+    public ReceivedMessageListItem[] Items { get; set; }
 }

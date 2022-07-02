@@ -1,6 +1,6 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public record MessageSendArgs
+public record MessageSendRequestArgs
 {
     public long Receiver { get; set; }
     public string MessageBase64 { get; set; }

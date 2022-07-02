@@ -1,6 +1,6 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public class ReceivedMessage
+public class ReceivedMessageListItem
 {
     public virtual long Id{ get; set; }
     public virtual DateTime WhenSent{ get; set; }

@@ -86,21 +86,21 @@ namespace RedMessagingDemo.Server.Controllers
             return new ReceiverDocumentList { Items = docs };
         }
 
-        //Document enrolment result
+        //Document documentEnrolmentRequestArgs result
         // POST api/<DocumentsController>
         [HttpPost]
-        public void Post([FromBody] Enrolment enrolment, [FromServices] ApplicationDbContext db)
+        public void Post([FromBody] DocumentEnrolmentRequestArgs documentEnrolmentRequestArgs, [FromServices] ApplicationDbContext db)
         {
             var user = db.Users.Single(x => x.Id == this.GetUserId());
             var doc = new Document
             {
-                CaProtocolPublicKey = enrolment.ChipAuthenticationProtocolInfo.PublicKeyInfo.PublicKeyBase64,
-                CaProtocolOid = enrolment.ChipAuthenticationProtocolInfo.ProtocolOid,
-                DataGroup14 = Base64.Decode(enrolment.DataGroup14Base64),
-                DisplayName = enrolment.DisplayName,
-                FileContent= Base64.Decode(enrolment.FileContentsBase64),
-                FileId = enrolment.FileId,
-                FileReadLength = enrolment.FileReadLength,
+                CaProtocolPublicKey = documentEnrolmentRequestArgs.ChipAuthenticationProtocolInfo.PublicKeyInfo.PublicKeyBase64,
+                CaProtocolOid = documentEnrolmentRequestArgs.ChipAuthenticationProtocolInfo.ProtocolOid,
+                DataGroup14 = Base64.Decode(documentEnrolmentRequestArgs.DataGroup14Base64),
+                DisplayName = documentEnrolmentRequestArgs.DisplayName,
+                FileContent= Base64.Decode(documentEnrolmentRequestArgs.FileContentsBase64),
+                FileId = documentEnrolmentRequestArgs.FileId,
+                FileReadLength = documentEnrolmentRequestArgs.FileReadLength,
                 Owner = user,
             };
             db.Documents.Add(doc);
