@@ -1,0 +1,38 @@
+﻿@page "/link"
+@using System.Net;
+@using CaSessionUtilities
+@using RedMessagingDemo.Shared
+@using Microsoft.AspNetCore.Authorization
+@*@using System.Diagnostics*@
+@using System.Text;
+@using Org.BouncyCastle.Utilities.Encoders;
+
+@attribute [Authorize]
+@inject HttpClient _HttpClient
+<head>
+    <style>svg {width: 100%; height: auto;} </style>
+</head>
+<PageTitle>Link</PageTitle>
+
+@if (!string.IsNullOrEmpty(_QR))
+{
+    <p>Scan this QR code with the app... blah blah</p>
+    @((MarkupString)_QR)
+}
+else
+{
+    <p>Where it is?</p>
+}
+
+@code {
+    private string? _QR;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await _HttpClient.GetFromJsonAsync<MobileDeviceLinkResponse>("api/LinkedDevices/token");
+        if (response == null) 
+            return;
+        _QR = WebUtility.HtmlDecode(response?.Svg);
+    }
+}

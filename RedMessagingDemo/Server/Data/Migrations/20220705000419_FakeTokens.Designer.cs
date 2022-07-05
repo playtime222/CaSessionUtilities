@@ -12,8 +12,8 @@ using RedMessagingDemo.Server.Data;
 namespace RedMessagingDemo.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220702145440_initial")]
-    partial class initial
+    [Migration("20220705000419_FakeTokens")]
+    partial class FakeTokens
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -412,6 +412,29 @@ namespace RedMessagingDemo.Server.Migrations
                     b.ToTable("Documents");
                 });
 
+            modelBuilder.Entity("RedMessagingDemo.Server.Models.FakeApiToken", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("FakeApiTokens");
+                });
+
             modelBuilder.Entity("RedMessagingDemo.Server.Models.Message", b =>
                 {
                     b.Property<long>("Id")
@@ -507,6 +530,17 @@ namespace RedMessagingDemo.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("RedMessagingDemo.Server.Models.FakeApiToken", b =>
+                {
+                    b.HasOne("RedMessagingDemo.Server.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("RedMessagingDemo.Server.Models.Message", b =>

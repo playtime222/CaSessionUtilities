@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Utilities.Encoders;
@@ -10,7 +12,6 @@ using RedMessagingDemo.Shared;
 
 namespace RedMessagingDemo.Server.Controllers
 {
-
     public static class MappingEx
     {
         public static RedMessagingDemo.Shared.CaSessionArgs ToCaSessionArgs(this CaSessionUtilities.CaSessionArgs thiz)

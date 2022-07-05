@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedMessagingDemo.Client", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedMessagingDemo.Shared", "RedMessagingDemo\Shared\RedMessagingDemo.Shared.csproj", "{477265A2-68BE-41CC-8858-28CFE645436A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedMessagingDemo.Server.Tests", "RedMessagingDemo.Server.Tests\RedMessagingDemo.Server.Tests.csproj", "{6B9AF112-044D-4858-8C9A-19F66AEF7C5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedMessagingDemo.Server.Tests", "RedMessagingDemo.Server.Tests\RedMessagingDemo.Server.Tests.csproj", "{6B9AF112-044D-4858-8C9A-19F66AEF7C5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
