@@ -67,9 +67,9 @@ else
         //Use of library - start
         var rdeSessionArgs = new RdeMessageCreateArgs()
             {
-                CaSessionArgs = document.CaSessionArgs.ToCaSessionArgs(),
+                CaSessionArgs = document.ChipAuthenticationProtocolInfo.ToCaSessionArgs(),
                 FileContent = Base64.Decode(document.FileContentBase64),
-                FileShortId = document.FileShortId,
+                FileShortId = document.FileId,
                 ReadLength = document.ReadLength,
             };
 

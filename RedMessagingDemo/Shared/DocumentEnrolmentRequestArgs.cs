@@ -1,6 +1,6 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public record DocumentEnrolmentRequestArgs
+public class DocumentEnrolmentRequestArgs
 {
     public string DisplayName { get; set; }
     

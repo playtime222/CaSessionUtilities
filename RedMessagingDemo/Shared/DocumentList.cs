@@ -1,6 +1,6 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public record DocumentList
+public class DocumentList
 {
     public DocumentListItem[] Items {get;set;}
 }

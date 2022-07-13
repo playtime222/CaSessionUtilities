@@ -1,9 +1,9 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public record DocumentSecurityObjectInfo
+public class DocumentSecurityObjectInfo
 {
     /// <summary>
     /// TODO Not actually used as currently the demo does not verify DG signatures.
     /// </summary>
-    public string VerficationPublicKeyBase64 { get; init; }
+    public string VerificationPublicKeyBase64 { get; init; }
 }

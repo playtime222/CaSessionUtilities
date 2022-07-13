@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="RedMessagingDemo.Shared.MobileDeviceLinkResponse">
+    <Position X="3.5" Y="5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>MobileDeviceLinkResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ReceivedMessageList" Collapsed="true">
+    <Position X="3.5" Y="11.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ReceivedMessageList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ReceivedMessageListItem">
+    <Position X="8.75" Y="11.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAEAEAAAA=</HashCode>
+      <FileName>ReceivedMessageListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.DocumentList" Collapsed="true">
+    <Position X="3.75" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DocumentList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.DocumentListItem">
+    <Position X="8.75" Y="16" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DocumentListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ChipAuthenticationProtocolInfo">
+    <Position X="9.5" Y="2.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAACAAAAAAAA=</HashCode>
+      <FileName>ChipAuthenticationProtocolInfo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PublicKeyInfo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ChipAuthenticationPublicKeyInfo">
+    <Position X="15.5" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>ChipAuthenticationPublicKeyInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.DocumentEnrolmentRequestArgs">
+    <Position X="3.5" Y="0.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEISAAAAAAAEAAAgAAAAAAAAAAAAAAAAAQAIAAAA=</HashCode>
+      <FileName>DocumentEnrolmentRequestArgs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ChipAuthenticationProtocolInfo" />
+      <Property Name="DocumentSecurityObjectInfo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.DocumentSecurityObjectInfo">
+    <Position X="9.5" Y="0.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DocumentSecurityObjectInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.MessageSendRequestArgs">
+    <Position X="3.5" Y="6.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAACAAAEAAAA=</HashCode>
+      <FileName>MessageSendRequestArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ReceiverDocument">
+    <Position X="3.5" Y="3.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAEAAAAAAAAgIAAAA=</HashCode>
+      <FileName>ReceiverDocument.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ChipAuthenticationProtocolInfo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ReceiverDocumentList" Collapsed="true">
+    <Position X="3.5" Y="13.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ReceiverDocumentList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ReceiverDocumentListItem">
+    <Position X="8.75" Y="13.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>ReceiverDocumentListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedMessagingDemo.Shared.ReceivedMessage">
+    <Position X="3.5" Y="8.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAABAAAAIAAAAAAAAAAAAAAAAAAAAAAEAEAAAA=</HashCode>
+      <FileName>ReceivedMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

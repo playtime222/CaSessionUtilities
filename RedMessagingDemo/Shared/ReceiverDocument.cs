@@ -4,10 +4,10 @@
 /// <summary>
 /// AKA RDE Certificate contents
 /// </summary>
-public record ReceiverDocument
+public class ReceiverDocument
 {
-    public CaSessionArgs CaSessionArgs { get; init; }
-    public int FileShortId { get; init; }
+    public ChipAuthenticationProtocolInfo ChipAuthenticationProtocolInfo { get; init; }
+    public int FileId { get; init; }
     public string FileContentBase64 { get; init; }
 
     /// <summary>

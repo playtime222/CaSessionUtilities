@@ -8,6 +8,7 @@ namespace RedMessagingDemo.Shared
 {
     public class MobileDeviceLinkResponse
     {
-        public string Svg { get; set; }
+        public string Token { get; set; }
+        public string TokenQrCodeSvg { get; set; }
     }
 }

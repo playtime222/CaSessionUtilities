@@ -1,6 +1,6 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public record ChipAuthenticationPublicKeyInfo
+public class ChipAuthenticationPublicKeyInfo
 {
     //[Obsolete("Fallback only?")]
     //public string? Oid { get; init; }

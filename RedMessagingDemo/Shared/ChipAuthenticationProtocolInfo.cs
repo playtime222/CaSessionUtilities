@@ -1,6 +1,6 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public record ChipAuthenticationProtocolInfo
+public class ChipAuthenticationProtocolInfo
 {
     //caSessionArgs.getCaPublicKeyInfo().getKeyId(),
     //caSessionArgs.getCaPublicKeyInfo().getObjectIdentifier(),

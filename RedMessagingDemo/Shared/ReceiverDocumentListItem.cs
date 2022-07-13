@@ -1,6 +1,6 @@
 ﻿namespace RedMessagingDemo.Shared;
 
-public record ReceiverDocumentListItem
+public class ReceiverDocumentListItem
 {
     public long Id { get; set; }
     public string EmailAddress { get; set; }

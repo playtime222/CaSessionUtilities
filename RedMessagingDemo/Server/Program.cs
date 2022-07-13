@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using RedMessagingDemo.Server.Data;
 using RedMessagingDemo.Server.Models;
+using RedMessagingDemo.Server.Commands;
 
 namespace RedMessagingDemo
 {
@@ -24,6 +25,16 @@ namespace RedMessagingDemo
                 .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            builder.Services.AddScoped<CreateTokenAsSvgCommand>();
+            builder.Services.AddScoped<EnrolDocumentCommand>();
+            builder.Services.AddScoped<FindReceiverDocumentsCommand>();
+            builder.Services.AddScoped<FindSingleMessageCommand>();
+            builder.Services.AddScoped<FindSingleReceiverDocumentCommand>();
+            builder.Services.AddScoped<FindUserFromBearerTokenCommand>();
+            builder.Services.AddScoped<ListDocumentsByUserCommand>();
+            builder.Services.AddScoped<ListMessagesByUserCommand>();
+            builder.Services.AddScoped<SendMessageCommand>();
+            
             builder.Services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
@@ -71,7 +82,6 @@ namespace RedMessagingDemo
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapRazorPages();
             app.MapControllers();
