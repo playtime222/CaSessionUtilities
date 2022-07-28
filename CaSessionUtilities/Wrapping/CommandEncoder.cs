@@ -14,32 +14,32 @@ public class CommandEncoder
         _Wrapper = wrapper;
     }
 
-    public CommandAPDU Encode(CommandAPDU commandAPDU)
+    public CommandApdu Encode(CommandApdu commandApdu)
     {
-        return WrapCommandAPDU(commandAPDU);
+        return WrapCommandAPDU(commandApdu);
     }
     
     /**
      * Performs the actual encoding of a command APDU.
      * Based on Section E.3 of ICAO-TR-PKI, especially the examples.
      *
-     * @param commandAPDU the command APDU
+     * @param commandApdu the command APDU
      *
      * @return a byte array containing the wrapped APDU buffer
      */
-    private CommandAPDU WrapCommandAPDU(CommandAPDU commandAPDU)
+    private CommandApdu WrapCommandAPDU(CommandApdu commandAPDU)
     {
         int cla = commandAPDU.CLA;
         int ins = commandAPDU.INS;
         int p1 = commandAPDU.P1;
         int p2 = commandAPDU.P2;
-        //int lc = commandAPDU.Nc;
+        //int lc = commandApdu.Nc;
         int le = commandAPDU.Ne;
 
         byte[] maskedHeader = { (byte)(cla | (byte)0x0C), (byte)ins, (byte)p1, (byte)p2 };
         byte[] paddedMaskedHeader = maskedHeader.GetPaddedArrayMethod2(_Wrapper.BlockSize);
 
-        bool hasDO85 = ((byte)commandAPDU.INS == ISO7816.INS_READ_BINARY2);
+        //bool hasDO85 = ((byte)commandApdu.INS == ISO7816.INS_READ_BINARY2);
 
         byte[] do8587 = new byte[0];
         byte[] do97 = new byte[0];
@@ -66,17 +66,16 @@ public class CommandEncoder
          */
         if (le <= 256 && data.Length <= 255)
         {
-            return new CommandAPDU(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, 256);
+            return new CommandApdu(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, 256);
         }
-        else if (le > 256 || data.Length > 255)
+        
+        if (le > 256 || data.Length > 255)
         {
-            return new CommandAPDU(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, 65536);
+            return new CommandApdu(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, 65536);
         }
-        else
-        {
-            /* Not sure if this case ever occurs, but this is consistent with previous behavior. */
-            return new CommandAPDU(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, _Wrapper.MaxTranceiveLength);
-        }
+        
+        //Not sure if this case ever occurs, but this is consistent with previous behavior. */
+        return new CommandApdu(maskedHeader[0], maskedHeader[1], maskedHeader[2], maskedHeader[3], data, _Wrapper.MaxTranceiveLength);
     }
 
     private byte[] GetDo8eBlock(byte[] n)

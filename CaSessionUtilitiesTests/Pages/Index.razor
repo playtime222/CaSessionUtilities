@@ -46,7 +46,7 @@
         const int shortFileId = 14;
 
         var sfi = 0x80 | (shortFileId & 0xFF);
-        var plainApdu = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_READ_BINARY, sfi, 0, requestedLength);
+        var plainApdu = new CommandApdu(ISO7816.CLA_ISO7816, ISO7816.INS_READ_BINARY, sfi, 0, requestedLength);
         var actualPlain = plainApdu.ToArray();
         sb.AppendLine("act apdu  : " + Hex.ToHexString(actualPlain));
         sb.AppendLine("exp apdu  : " + hexPlain);

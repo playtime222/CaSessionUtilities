@@ -1,4 +1,7 @@
-﻿namespace CaSessionUtilities.Wrapping;
+﻿using System.Diagnostics;
+using Org.BouncyCastle.Utilities.Encoders;
+
+namespace CaSessionUtilities.Wrapping;
 
 public class AesSecureMessagingWrapper : SecureMessagingWrapper
 {
@@ -12,10 +15,14 @@ public class AesSecureMessagingWrapper : SecureMessagingWrapper
     public override byte[] CalculateMac(byte[] data)
         => Crypto.GetAesCMac(KsMac, data);
 
-    public override byte[] GetEncodedDataForResponse(byte[] response, long ssc)
+    public override byte[] GetEncodedDataForResponse(byte[] paddedResponse, long ssc)
     {
         var iv = Crypto.GetAesEcbNoPaddingCipherText(KsEnc, GetEncodedSendSequenceCounter(2)); //Contains state -> 2 the SSC counter...
-        return Crypto.GetAesCbcNoPaddingCipherText(KsEnc, iv, response);
+        Trace.WriteLine($"IV: {Hex.ToHexString(iv)}");
+
+        var result = Crypto.GetAesCbcNoPaddingCipherText(KsEnc, iv, paddedResponse);
+        Trace.WriteLine($"Response ciphertext: {Hex.ToHexString(result)}");
+        return result;
     }
 
     public override byte[] GetEncodedSendSequenceCounter(long ssc) 

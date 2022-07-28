@@ -38,13 +38,4 @@ public class DocumentsController : ControllerBase
     {
         return await listDocuments.ExecuteAsync(this.GetUserId());
     }
-
-    //Document args result
-    // POST api/<DocumentsController>
-    [HttpPost]
-    public async Task EnrolAsync([FromBody] DocumentEnrolmentRequestArgs args, [FromServices] EnrolDocumentCommand cmd)
-    {
-        await cmd.Enrol(args, this.GetUserId());
-    }
-
 }

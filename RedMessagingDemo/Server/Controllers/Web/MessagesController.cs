@@ -14,12 +14,6 @@ namespace RedMessagingDemo.Server.Controllers.Web;
 [ApiController]
 public class MessagesController : ControllerBase
 {
-
-    // GET: api/<DocumentsController>
-    [HttpGet]
-    public async Task<DocumentList> GetAsync([FromServices] ListDocumentsByUserCommand listDocuments)
-        => await listDocuments.ExecuteAsync(this.GetUserId());
-
     [HttpGet("received")]
     public async Task<ActionResult<ReceivedMessageList>> GetListAsync([FromServices] ListMessagesByUserCommand listMessages)
         => await listMessages.Execute(this.GetUserId());
@@ -44,12 +38,12 @@ public class MessagesController : ControllerBase
     public async Task<ActionResult> Post([FromServices] SendMessageCommand sendMessage, [FromBody] MessageSendRequestArgs messageRequestArgs)
         => await sendMessage.ExecuteAsync(messageRequestArgs, this.GetUserId());
 
-    // DELETE api/<DocumentsController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-        throw new NotImplementedException();
-    }
+    //// DELETE api/<DocumentsController>/5
+    //[HttpDelete("{id}")]
+    //public void Delete(int id)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
 
 }

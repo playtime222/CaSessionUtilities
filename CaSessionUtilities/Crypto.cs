@@ -123,7 +123,7 @@ namespace CaSessionUtilities
         {
             var digest = new Sha256Digest();
             digest.BlockUpdate(response, 0, response.Length);
-            byte[] result = new byte[digest.GetDigestSize()];
+            var result = new byte[digest.GetDigestSize()];
             digest.DoFinal(result, 0);
             return result;
         }

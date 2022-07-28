@@ -35,7 +35,10 @@ public class ResponseEncoder
 
     public byte[] Write(byte[] response)
     {
-        Trace.WriteLine(("Response:" + Hex.ToHexString(response)));
+        if (response.Length == 0)
+            throw new ArgumentException();
+
+        Trace.WriteLine(("Response       : " + Hex.ToHexString(response)));
         WriteDo87(response);
         WriteDo99();
         WriteMac();
@@ -60,22 +63,22 @@ public class ResponseEncoder
     {
         _Result.Write(RESPONSE_RESULT_BLOCK);
     }
-
+    
     private void WriteDo87(byte[] response)
     {
-        if (response.Length == 0)
-            return;
+        var paddedResponse = response.GetPaddedArrayMethod1(_Wrapper.BlockSize);
+        Trace.WriteLine($"Padded response: {Hex.ToHexString(paddedResponse)}");
 
-        var encodedData = _Wrapper.GetEncodedDataForResponse(response.GetPaddedArrayMethod1(_Wrapper.BlockSize), SecureSessionCounter);
+        var encodedData = _Wrapper.GetEncodedDataForResponse(paddedResponse, SecureSessionCounter);
         _Result.Write(new[] { DATA_BLOCK_START_TAG });
         _Result.Write(GetEncodedDo87Size(encodedData.Length));
         _Result.Write(encodedData);
     }
 
     //// TODO make private. Only public for tests.
-    private byte[] GetEncodedDo87Size(int paddedDo87Length)
+    public static byte[] GetEncodedDo87Size(int paddedDo87Length)
     {
-        int MIN_LONG_FORM_SIZE = 128;
+        const int MIN_LONG_FORM_SIZE = 128;
         var actualLength = (paddedDo87Length + 1);
         // Cos of the 0x01 tag
         // Short form

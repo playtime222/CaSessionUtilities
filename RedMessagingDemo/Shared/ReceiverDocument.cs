@@ -6,6 +6,8 @@
 /// </summary>
 public class ReceiverDocument
 {
+    public string DocumentDisplayName { get; set; }
+
     public ChipAuthenticationProtocolInfo ChipAuthenticationProtocolInfo { get; init; }
     public int FileId { get; init; }
     public string FileContentBase64 { get; init; }

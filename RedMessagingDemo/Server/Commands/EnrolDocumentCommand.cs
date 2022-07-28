@@ -20,7 +20,7 @@ public class EnrolDocumentCommand
         var user = _Db.Users.Single(x => x.Id == userId);
         var doc = new Document
         {
-            CaProtocolPublicKey = args.ChipAuthenticationProtocolInfo.PublicKeyInfo.PublicKeyBase64,
+            CaProtocolPublicKey = Hex.ToHexString(Base64.Decode   (args.ChipAuthenticationProtocolInfo.PublicKeyInfo.PublicKeyBase64)),
             CaProtocolOid = args.ChipAuthenticationProtocolInfo.ProtocolOid,
             DataGroup14 = Base64.Decode(args.DataGroup14Base64),
             DisplayName = args.DisplayName,

@@ -2,6 +2,7 @@ using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 
@@ -69,7 +70,11 @@ public sealed class ZipMessageEncoder : IMessageEncoder
 
             WritePlain(VersionEntryName, VersionGmacEntryName, Encoding.UTF8.GetBytes(Version));
             WritePlain(NoteEntryName, NoteGmacEntryName, Encoding.UTF8.GetBytes(messageArgs.UnencryptedNote));
-            var json = JsonConvert.SerializeObject(args);
+
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            
+            var json = JsonConvert.SerializeObject(args, serializerSettings);
             WritePlain(RdeSessionArgsEntryName, RdeSessionArgsGmacEntryName, Encoding.UTF8.GetBytes(json));
 
             var filenames = new List<string>();
@@ -83,7 +88,7 @@ public sealed class ZipMessageEncoder : IMessageEncoder
             var metadata = new Metadata();
             var v = filenames.ToArray();
             metadata.Filenames = v;
-            WriteEncrypted(MetadataEntryName, MetadataGmacEntryName, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(metadata)));
+            WriteEncrypted(MetadataEntryName, MetadataGmacEntryName, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(metadata, serializerSettings)));
         }
         _Result.Flush();
         return _Result.ToArray();

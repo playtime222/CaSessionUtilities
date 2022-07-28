@@ -24,7 +24,7 @@ public class CommandEncoderTests
     [InlineData(257, "00b08e00000101", "0cb08e0000000e970201018e08be975ead600e26f70000", "7319D1537EF2FE5CB46AFCFF2DF33B521F3A0C4FA92212D98EB49D9CD6BB8916", "ADCBA368FD14A836908252EF76D09BAD2766C5FFB2FE7857F468676FC4B293E0")]
     [InlineData(300, "00b08e0000012c", "0cb08e0000000e9702012c8e08bd308fb58e028d140000", "7319D1537EF2FE5CB46AFCFF2DF33B521F3A0C4FA92212D98EB49D9CD6BB8916", "ADCBA368FD14A836908252EF76D09BAD2766C5FFB2FE7857F468676FC4B293E0")]
     [Theory]
-    private void Write(int requestedLength, string hexPlain, string hexWrapped, string ksEncString, string ksMacString)
+     public void Write(int requestedLength, string hexPlain, string hexWrapped, string ksEncString, string ksMacString)
     {
         Trace.WriteLine("KsEnc     : " + ksEncString);
         Trace.WriteLine("KsMac     : " + ksMacString);
@@ -34,7 +34,7 @@ public class CommandEncoderTests
         const int shortFileId = 14;
 
         var sfi = 0x80 | (shortFileId & 0xFF);
-        var plainApdu = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_READ_BINARY, sfi, 0, requestedLength);
+        var plainApdu = new CommandApdu(ISO7816.CLA_ISO7816, ISO7816.INS_READ_BINARY, sfi, 0, requestedLength);
         var actualPlain = plainApdu.ToArray();
         Trace.WriteLine("act apdu  : " + Hex.ToHexString(actualPlain));
         Trace.WriteLine("exp apdu  : " + hexPlain);

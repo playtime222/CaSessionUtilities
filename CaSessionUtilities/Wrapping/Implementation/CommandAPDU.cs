@@ -7,7 +7,7 @@ using Org.BouncyCastle.Utilities;
 
 namespace CaSessionUtilities.Wrapping.Implementation
 {
-    public class CommandAPDU
+    public class CommandApdu
     {
         //private static int MAX_APDU_SIZE = 65544;
 
@@ -33,14 +33,14 @@ namespace CaSessionUtilities.Wrapping.Implementation
             }
         }
 
-        public CommandAPDU(int cla, int ins, int p1, int p2, int ne) : this(cla, ins, p1, p2, null, 0, 0, ne)
+        public CommandApdu(int cla, int ins, int p1, int p2, int ne) : this(cla, ins, p1, p2, null, 0, 0, ne)
         {
         }
-        public CommandAPDU(int cla, int ins, int p1, int p2, byte[] data, int ne) : this(cla, ins, p1, p2, data, 0, data?.Length ?? 0, ne)
+        public CommandApdu(int cla, int ins, int p1, int p2, byte[] data, int ne) : this(cla, ins, p1, p2, data, 0, data?.Length ?? 0, ne)
         {
         }
 
-        private CommandAPDU(int cla, int ins, int p1, int p2, byte[] data, int dataOffset, int dataLength, int ne)
+        private CommandApdu(int cla, int ins, int p1, int p2, byte[] data, int dataOffset, int dataLength, int ne)
         {
             checkArrayBounds(data, dataOffset, dataLength);
             if (dataLength > 65535)
@@ -242,8 +242,8 @@ namespace CaSessionUtilities.Wrapping.Implementation
 
         /**
          * Compares the specified object with this command APDU for equality.
-         * Returns true if the given object is also a CommandAPDU and its bytes are
-         * identical to the bytes in this CommandAPDU.
+         * Returns true if the given object is also a CommandApdu and its bytes are
+         * identical to the bytes in this CommandApdu.
          *
          * @param obj the object to be compared for equality with this command APDU
          * @return true if the specified object is equal to this command APDU
@@ -254,10 +254,10 @@ namespace CaSessionUtilities.Wrapping.Implementation
         //    {
         //        return true;
         //    }
-        //    if (obj instanceof CommandAPDU == false) {
+        //    if (obj instanceof CommandApdu == false) {
         //        return false;
         //    }
-        //    CommandAPDU other = (CommandAPDU)obj;
+        //    CommandApdu other = (CommandApdu)obj;
         //    return Arrays.equals(_Content, other._Content);
         //}
 

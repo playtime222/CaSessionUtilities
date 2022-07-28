@@ -4,23 +4,21 @@ namespace CaSessionUtilities.Wrapping.Implementation;
 
 public static class SessionMessagingWrapperKeyUtility
 {
-
     public const int ENC_MODE = 1;
     public const int MAC_MODE = 2;
 
     public static byte[] DeriveKey(byte[] keySeed, ChipAuthenticationCipherInfo cipherInfo, int mode)
         => DeriveKey(keySeed, cipherInfo.Algorithm, cipherInfo.KeyLength, mode);
-    private static byte[] DeriveKey(byte[] keySeed, string cipherAlg, int keyLength, int mode)
+    private static byte[] DeriveKey(byte[] keySeed, CipherAlgorithm cipherAlg, int keyLength, int mode)
     {
-        var digest = getDigest(cipherAlg, keyLength);
+        var digest = GetDigest(cipherAlg, keyLength);
         digest.BlockUpdate(keySeed, 0, keySeed.Length);
         digest.BlockUpdate(new byte[] { 0x00, 0x00, 0x00, (byte)mode }, 0, 4);
         var hashResult = new byte[digest.GetDigestSize()];
         digest.DoFinal(hashResult, 0);
 
-        if ("DESede".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "3DES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
+        if (cipherAlg == CipherAlgorithm.DESede)
         {
-            /* TR-SAC 1.01, 4.2.1. */
             switch (keyLength)
             {
                 case 112:
@@ -31,12 +29,12 @@ public static class SessionMessagingWrapperKeyUtility
                     Array.Copy(hashResult, 0, keyBytes, 16, 8); /* E (again octets 1 to 8, i.e. 112-bit 3DES key) */
                     return keyBytes;
                 default:
-                    throw new InvalidOperationException("DESede with 128-bit key length only");
+                    throw new InvalidOperationException("DESede with 128 bit key length only");
             }
         }
-        else if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || cipherAlg.StartsWith("AES", StringComparison.InvariantCultureIgnoreCase))
+
+        if (cipherAlg == CipherAlgorithm.Aes)
         {
-            /* TR-SAC 1.01, 4.2.2. */
             switch (keyLength)
             {
                 case 128:
@@ -46,23 +44,20 @@ public static class SessionMessagingWrapperKeyUtility
                     Array.Copy(hashResult, 0, keyBytes, 0, keyBytes.Length);
                     return keyBytes;
                 default:
-                    throw new InvalidOperationException("KDF can only use AES with 128-bit, 192-bit key or 256-bit length");
+                    throw new InvalidOperationException("AES with 128, 192 or 256 bit key length");
             }
         }
 
         throw new InvalidOperationException();
     }
 
-    private static GeneralDigest getDigest(string cipherAlg, int keyLength)
+    private static GeneralDigest GetDigest(CipherAlgorithm cipherAlg, int keyLength)
     {
-        if ("DESede".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "AES-128".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
+        if (CipherAlgorithm.DESede == cipherAlg || 
+            CipherAlgorithm.Aes == cipherAlg && keyLength == 128)
             return new Sha1Digest();
-        if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) && keyLength == 128)
-            return new Sha1Digest();
-
-        if ("AES-256".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) || "AES-192".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase))
-            return new Sha256Digest();
-        if ("AES".Equals(cipherAlg, StringComparison.InvariantCultureIgnoreCase) && (keyLength == 192 || keyLength == 256))
+        
+        if (CipherAlgorithm.Aes == cipherAlg && keyLength is 192 or 256)
             return new Sha256Digest();
 
         throw new InvalidOperationException("Unsupported cipher algorithm or key length.");

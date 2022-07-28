@@ -9,6 +9,8 @@
 @using Newtonsoft.Json
 @attribute [Authorize]
 @inject HttpClient _HttpClient
+@inject NavigationManager _NavManager
+
 
 <h3>Send</h3>
 
@@ -85,8 +87,11 @@ else
 
         var rdeMessageDecryptionInfo = new RdeMessageDecryptionInfo()
             {
+                CaProtocolOid = document.ChipAuthenticationProtocolInfo.ProtocolOid,
+                DocumentDisplayName = document.DocumentDisplayName,
                 PcdPublicKey = Hex.ToHexString(rdeMessageParameters.EphemeralPublicKey),
                 Command = Hex.ToHexString(rdeMessageParameters.WrappedCommand),
+                DebugInfo = rdeMessageParameters.DebugInfo
             };
 
         var message = new ZipMessageEncoder().Encode(messageArgs, rdeMessageDecryptionInfo, secretKey);
@@ -99,6 +104,8 @@ else
                 Note = _MessageSendArgs.Note,
             };
 
-        await _HttpClient.PostAsJsonAsync("/api/messages/send", sendArgs);
+        await _HttpClient.PostAsJsonAsync("/api/messages", sendArgs);
+
+         //_NavManager.NavigateTo("/sent"); //TODO Dont have that page yet
     }
 }

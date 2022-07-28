@@ -2,18 +2,13 @@
 
 public class ChipAuthenticationCipherInfo
 {
-    //public enum Alg
-    //{
-    //    Aes,
-    //    DeSede
-    //}
 
-    public ChipAuthenticationCipherInfo(string algorithm, int keyLength)
+    public ChipAuthenticationCipherInfo(CipherAlgorithm algorithm, int keyLength)
     {
         Algorithm = algorithm;
         KeyLength = keyLength;
     }
 
-    public string Algorithm { get; }
+    public CipherAlgorithm Algorithm { get; }
     public int KeyLength { get; }
 }

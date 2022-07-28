@@ -2,8 +2,9 @@
 
 public class ReceivedMessageListItem
 {
-    public virtual long Id{ get; set; }
-    public virtual DateTime WhenSent{ get; set; }
-    public virtual string SenderEmail { get; set; }
-    public virtual string Note { get; set; }
+    public long Id{ get; set; }
+    public string DocumentDisplayName{ get; set; }
+    public DateTime WhenSent{ get; set; }
+    public string SenderEmail { get; set; }
+    public string Note { get; set; }
 }

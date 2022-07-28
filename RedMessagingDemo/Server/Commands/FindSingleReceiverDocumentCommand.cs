@@ -22,6 +22,7 @@ public class FindSingleReceiverDocumentCommand
 
         return new ReceiverDocument()
         {
+            DocumentDisplayName = doc.DisplayName,
             ChipAuthenticationProtocolInfo = new() { ProtocolOid = doc.CaProtocolOid, PublicKeyInfo = new ChipAuthenticationPublicKeyInfo { PublicKeyBase64 = Base64.ToBase64String(Hex.Decode(doc.CaProtocolPublicKey)) } },
             FileContentBase64 = Base64.ToBase64String(doc.FileContent),
             FileId = doc.FileId,

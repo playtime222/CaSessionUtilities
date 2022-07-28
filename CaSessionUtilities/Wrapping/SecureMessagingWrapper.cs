@@ -1,9 +1,13 @@
-﻿namespace CaSessionUtilities.Wrapping;
+﻿using System.Text;
+using CaSessionUtilities.Messaging;
+using Org.BouncyCastle.Utilities.Encoders;
+
+namespace CaSessionUtilities.Wrapping;
 
 
 
 /// <summary>
-/// JUST the encryption methods required during the wrapping of the command and the response
+/// JUST the encryption methods required during the wrapping of the command and the paddedResponse
 /// </summary>
 public abstract class SecureMessagingWrapper
 {
@@ -33,5 +37,17 @@ public abstract class SecureMessagingWrapper
 
     public abstract byte[] CalculateMac(byte[] data);
 
-    public abstract byte[] GetEncodedDataForResponse(byte[] response, long ssc);
+    public abstract byte[] GetEncodedDataForResponse(byte[] paddedResponse, long ssc);
+
+    public SecureMessagingWrapperDebugInfo Dump()
+    {
+        return new SecureMessagingWrapperDebugInfo
+        {
+            Type = GetType().Name,
+            Cipher = CipherAlg,
+            Mac = MacAlg,
+            KsEnc = Hex.ToHexString(KsEnc),
+            KsMac = Hex.ToHexString(KsMac),
+        };
+    }
 }
