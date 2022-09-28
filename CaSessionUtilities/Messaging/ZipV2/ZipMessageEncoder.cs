@@ -50,7 +50,7 @@ public sealed class ZipMessageEncoder : IMessageEncoder
     private int _FileCounter = 4; //-> First one is R_5_1
 
     public static string GetEntryName(int fileCounter) => string.Format(CultureInfo.InvariantCulture, "R_{0}_1", fileCounter);
-    public static string GetMacEntryName(int fileCounter) => string.Format(CultureInfo.InvariantCulture, "A_{0}", fileCounter);
+    public static string GetMacEntryName(int fileCounter) => string.Format(CultureInfo.InvariantCulture, "AT_{0}", fileCounter);
 
     private string GetNextEntryName() => GetEntryName(++_FileCounter);
     private string GetMacEntryName() => GetMacEntryName(_FileCounter);
@@ -120,7 +120,6 @@ public sealed class ZipMessageEncoder : IMessageEncoder
     private void Write(string entryName, byte[] content) 
     {
         var entry = _ZipStream.CreateEntry(entryName);
-        //zipStream.putNextEntry(entry);
         using var stream = entry.Open();
         stream.Write(content);
         stream.Flush();
