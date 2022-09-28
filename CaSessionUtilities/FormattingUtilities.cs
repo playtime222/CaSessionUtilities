@@ -20,8 +20,8 @@ public static class FormattingUtilities
         return result.ToArray();
     }
 
-    public static string PrettyHexFormat(this byte[] thiz)
-        => string.Join("-", Hex.ToHexString(thiz).SplitEvery(16));
+    public static string PrettyHexFormat(this byte[] thiz, int partlength = 16)
+        => string.Join("-", Hex.ToHexString(thiz).SplitEvery(partlength));
 
 
 }

@@ -87,7 +87,7 @@ public class EACCAProtocol
     {
         var agreement = AgreementUtilities.GetBasicAgreement(alg == KeyAgreementAlgorithm.DH ? "DH" : "ECDH");
         agreement.Init(pcdPrivateKey);
-        return agreement.CalculateAgreement(piccPublicKey).ToByteArray();
+        return agreement.CalculateAgreement(piccPublicKey).ToByteArrayUnsigned();
     }
 
     public static SecureMessagingWrapper RestartSecureMessaging(string oid, byte[] sharedSecret)

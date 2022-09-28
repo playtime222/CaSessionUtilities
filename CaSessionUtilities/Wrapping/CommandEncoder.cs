@@ -44,7 +44,6 @@ public class CommandEncoder
         byte[] do8587 = new byte[0];
         byte[] do97 = new byte[0];
 
-
         /* Include the expected length, if present. */
         if (le > 0)
         {
