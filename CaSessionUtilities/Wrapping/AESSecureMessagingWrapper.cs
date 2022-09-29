@@ -15,7 +15,7 @@ public class AesSecureMessagingWrapper : SecureMessagingWrapper
     public override byte[] CalculateMac(byte[] data)
         => Crypto.GetAesCMac(KsMac, data);
 
-    public override byte[] GetEncodedDataForResponse(byte[] paddedResponse, long ssc)
+    public override byte[] GetEncodedDataForResponse(byte[] paddedResponse)
     {
         var iv = Crypto.GetAesEcbNoPaddingCipherText(KsEnc, GetEncodedSendSequenceCounter(2)); //Contains state -> 2 the SSC counter...
         Trace.WriteLine($"IV: {Hex.ToHexString(iv)}");

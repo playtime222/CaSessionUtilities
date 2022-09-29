@@ -37,7 +37,7 @@ public abstract class SecureMessagingWrapper
 
     public abstract byte[] CalculateMac(byte[] data);
 
-    public abstract byte[] GetEncodedDataForResponse(byte[] paddedResponse, long ssc);
+    public abstract byte[] GetEncodedDataForResponse(byte[] paddedResponse);
 
     public SecureMessagingWrapperDebugInfo Dump()
     {

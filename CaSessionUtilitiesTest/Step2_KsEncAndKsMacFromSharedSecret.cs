@@ -22,10 +22,12 @@ public class Step2_KsEncAndKsMacFromSharedSecret
     public const string Case2_KsMac = "ed93f9068a8153856670d170346460a90bc5e0a644e29f6b100c730753008d4c";
     public const string Case3_KsEnc = "73997b9688979a59ac7bc86320b719d80bd884ae7bea81014b7afa688feef70b";
     public const string Case3_KsMac = "f349280fd9a0d191144b7d0d1a50432c34ea6018951f44f94241e47dfbebc930";
-
-    [InlineData(Step1_SharedSecretGeneration.SharedSecretCase1, Case1_KsEnc, Case1_KsMac)]
-    [InlineData(Step1_SharedSecretGeneration.SharedSecretCase2, Case2_KsEnc, Case2_KsMac)]
-    [InlineData(Step1_SharedSecretGeneration.SharedSecretCase3, Case3_KsEnc, Case3_KsMac)]
+    public const string Case5_KsEnc = "a48a9f2da65b5c29e2c6a1b551d82aa04e3715a8bf9a1e3ab31de2a6f186ebd4";
+    public const string Case5_KsMac = "7fad095e6366f68d7f63733b612e2f54c7b9f1a8c434c1011c65cdee38facca0";
+    //[InlineData(Step1_SharedSecretGeneration.SharedSecretCase1, Case1_KsEnc, Case1_KsMac)]
+    //[InlineData(Step1_SharedSecretGeneration.SharedSecretCase2, Case2_KsEnc, Case2_KsMac)]
+    //[InlineData(Step1_SharedSecretGeneration.SharedSecretCase3, Case3_KsEnc, Case3_KsMac)]
+    [InlineData(Step1_SharedSecretGeneration.Case5_SharedSecret, Case5_KsEnc, Case5_KsMac)]
     [Theory]
     public void SeedToKsEnc(string seedHex, string ksEncHex, string ksMacHex)
     {

@@ -52,7 +52,7 @@ public class ResponseEncoder
     private void WriteMac()
     {
         Trace.WriteLine("MAC this: " + Hex.ToHexString(_Result.ToArray()));
-        var joined = Arrays.Concatenate(_Wrapper.GetEncodedSendSequenceCounter(SecureSessionCounter), _Result.ToArray().GetPaddedArrayMethod2(_Wrapper.BlockSize));
+        var joined = Arrays.Concatenate(_Wrapper.GetEncodedSendSequenceCounter(SecureSessionCounter), PaddingIso9797.GetPaddedArrayMethod2(_Result.ToArray(), _Wrapper.BlockSize));
         var macValue = _Wrapper.CalculateMac(joined);
         Trace.WriteLine("MAC     : " + Hex.ToHexString(macValue));
         _Result.Write(new [] { (byte)(MAC_BLOCK_START_TAG), (byte)MAC_LENGTH });
@@ -66,10 +66,10 @@ public class ResponseEncoder
     
     private void WriteDo87(byte[] response)
     {
-        var paddedResponse = response.GetPaddedArrayMethod1(_Wrapper.BlockSize);
+        var paddedResponse = PaddingIso9797.GetPaddedArrayMethod2(response, _Wrapper.BlockSize);
         Trace.WriteLine($"Padded response: {Hex.ToHexString(paddedResponse)}");
 
-        var encodedData = _Wrapper.GetEncodedDataForResponse(paddedResponse, SecureSessionCounter);
+        var encodedData = _Wrapper.GetEncodedDataForResponse(paddedResponse);
         _Result.Write(new[] { DATA_BLOCK_START_TAG });
         _Result.Write(GetEncodedDo87Size(encodedData.Length));
         _Result.Write(encodedData);

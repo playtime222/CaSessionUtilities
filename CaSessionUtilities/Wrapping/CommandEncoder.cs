@@ -37,7 +37,7 @@ public class CommandEncoder
         int le = commandAPDU.Ne;
 
         byte[] maskedHeader = { (byte)(cla | (byte)0x0C), (byte)ins, (byte)p1, (byte)p2 };
-        byte[] paddedMaskedHeader = maskedHeader.GetPaddedArrayMethod2(_Wrapper.BlockSize);
+        byte[] paddedMaskedHeader = PaddingIso9797.GetPaddedArrayMethod2(maskedHeader, _Wrapper.BlockSize);
 
         //bool hasDO85 = ((byte)commandApdu.INS == ISO7816.INS_READ_BINARY2);
 
@@ -103,7 +103,7 @@ public class CommandEncoder
         ms.Write(paddedMaskedHeader);
         ms.Write(do8587);
         ms.Write(do97);
-        var n = ms.ToArray().GetPaddedArrayMethod2(_Wrapper.BlockSize);
+        var n = PaddingIso9797.GetPaddedArrayMethod2(ms.ToArray(), _Wrapper.BlockSize);
         Trace.WriteLine($"{"n",-10}: {n.PrettyHexFormat()}");
         return n;
     }

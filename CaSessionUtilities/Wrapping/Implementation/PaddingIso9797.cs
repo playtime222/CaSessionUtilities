@@ -9,12 +9,12 @@ public static class PaddingIso9797
     /// Always append padding marker, then pad.
     /// </summary>
     /// <param name="input"></param>
-    /// <param name="blockSize"></param>
+    /// <param name="blockSize">bytes</param>
     /// <returns></returns>
-    public static byte[] GetPaddedArrayMethod2(this byte[] input, int blockSize)
+    public static byte[] GetPaddedArrayMethod2(byte[] input, int blockSize)
         => input.GetPaddedArrayMethod2(0, input.Length, blockSize);
 
-    public static byte[] GetPaddedArrayMethod2(this byte[] input, int offset, int length, int blockSize)
+    private static byte[] GetPaddedArrayMethod2(this byte[] input, int offset, int length, int blockSize)
     {
         var s = new MemoryStream();
         s.Write(input, offset, length);
@@ -25,17 +25,15 @@ public static class PaddingIso9797
         return s.ToArray();
     }
 
-
     /// <summary>
     /// No padding added if already aligned with block inputSize, otherwise use method 2.
     /// </summary>
     /// <param name="input"></param>
     /// <param name="blockSize"></param>
     /// <returns></returns>
-    public static byte[] GetPaddedArrayMethod1(this byte[] input, int blockSize)
-        => SizeAlignsWithBlockSize(input.Length, blockSize) ? input : input.GetPaddedArrayMethod2(blockSize);
+    public static byte[] GetPaddedArrayMethod1(byte[] input, int blockSize) => input.Length % blockSize == 0 ? input : GetPaddedArrayMethod2(input, blockSize);
 
-    private static int GetPaddedLengthMethod1(int inputSize, int blockSize) => (inputSize + blockSize) / blockSize * blockSize;
+    //private static int GetPaddedLengthMethod1(int inputSize, int blockSize) => (inputSize + blockSize) / blockSize * blockSize;
 
-    private static bool SizeAlignsWithBlockSize(int inputSize, int blockSize) => GetPaddedLengthMethod1(inputSize, blockSize) == inputSize;
+    //private static bool SizeAlignsWithBlockSize(int inputSize, int blockSize) => GetPaddedLengthMethod1(inputSize, blockSize) == inputSize;
 }

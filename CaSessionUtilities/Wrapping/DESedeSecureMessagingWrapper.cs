@@ -19,7 +19,7 @@ public class DESedeSecureMessagingWrapper : SecureMessagingWrapper
     /// <param name="paddedResponse"></param>
     /// <param name="ssc">Unused here.</param>
     /// <returns></returns>
-    public override byte[] GetEncodedDataForResponse(byte[] paddedResponse, long ssc)
+    public override byte[] GetEncodedDataForResponse(byte[] paddedResponse)
         => Crypto.GetDeSedeCbcNoPaddingCipherText(KsEnc, Iv, paddedResponse);
     
     public override byte[] GetEncodedSendSequenceCounter(long ssc)
