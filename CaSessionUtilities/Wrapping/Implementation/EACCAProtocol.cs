@@ -43,7 +43,7 @@ public class EACCAProtocol
         return new RdeEACCAResult(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(pcdEphemeralKeyPair.Public).GetDerEncoded(), wrapper, new RdeEacCaResultDebugInfo { SharedSecretHex = Hex.ToHexString( sharedSecret) });
     }
     
-    private static AsymmetricCipherKeyPair CreateKeyPair(KeyAgreementAlgorithm agreementAlg, AsymmetricKeyParameter piccPublicKeyAsCipherParameter)
+    public static AsymmetricCipherKeyPair CreateKeyPair(KeyAgreementAlgorithm agreementAlg, AsymmetricKeyParameter piccPublicKeyAsCipherParameter)
     {
         if (KeyAgreementAlgorithm.DH == agreementAlg)
         {

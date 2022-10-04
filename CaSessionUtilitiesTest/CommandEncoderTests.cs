@@ -8,12 +8,12 @@ namespace CaSessionUtilitiesTest;
 //Early debugging tests
 public class CommandEncoderTests
 {
-    public const string Case1_Length10_Command = "0cb08e000d97010a8e08185eade9e13a4fd300";
-    public const string Case1_Length100_Command = "0cb08e000d9701648e0824d9d59ddc0a48f300";
-    public const string Case2_Length10_Command = "0cb08e000d97010a8e08e2db7bbfe2a5434300";
-    public const string Case2_Length100_Command = "0cb08e000d9701648e08b6c9c04dc807bccd00";
-    public const string Case3_Length10_Command = "0cb08e000d97010a8e086b8d52f4b8bc826700";
-    public const string Case3_Length100_Command = "0cb08e000d9701648e084337d3b671b2d0bf00";
+    //public const string Case1_Length10_Command = "0cb08e000d97010a8e08185eade9e13a4fd300";
+    //public const string Case1_Length100_Command = "0cb08e000d9701648e0824d9d59ddc0a48f300";
+    //public const string Case2_Length10_Command = "0cb08e000d97010a8e08e2db7bbfe2a5434300";
+    //public const string Case2_Length100_Command = "0cb08e000d9701648e08b6c9c04dc807bccd00";
+    //public const string Case3_Length10_Command = "0cb08e000d97010a8e086b8d52f4b8bc826700";
+    //public const string Case3_Length100_Command = "0cb08e000d9701648e084337d3b671b2d0bf00";
 
     /// <summary>
     /// Test cases generated RDE-LIB - nl.rijksoverheid.rdw.rde.TestDataGeneratorTests.AesCommandApduTest //TODO may move...
@@ -34,16 +34,32 @@ public class CommandEncoderTests
     [InlineData(257, "00b08e00000101", "0cb08e0000000e970201018e08be975ead600e26f70000", "7319D1537EF2FE5CB46AFCFF2DF33B521F3A0C4FA92212D98EB49D9CD6BB8916", "ADCBA368FD14A836908252EF76D09BAD2766C5FFB2FE7857F468676FC4B293E0")]
     [InlineData(300, "00b08e0000012c", "0cb08e0000000e9702012c8e08bd308fb58e028d140000", "7319D1537EF2FE5CB46AFCFF2DF33B521F3A0C4FA92212D98EB49D9CD6BB8916", "ADCBA368FD14A836908252EF76D09BAD2766C5FFB2FE7857F468676FC4B293E0")]
 
-    [InlineData(10,  "00b08e000a", Case1_Length10_Command, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsMac)]
-    [InlineData(100, "00b08e0064", Case1_Length100_Command, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsMac)]
+    //[InlineData(10,  "00b08e000a", Case1_Length10_Command, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsMac)]
+    //[InlineData(100, "00b08e0064", Case1_Length100_Command, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case1_KsMac)]
                                    
-    [InlineData(10,  "00b08e000a", Case2_Length10_Command, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsMac)]
-    [InlineData(100, "00b08e0064", Case2_Length100_Command, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsMac)]
+    //[InlineData(10,  "00b08e000a", Case2_Length10_Command, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsMac)]
+    //[InlineData(100, "00b08e0064", Case2_Length100_Command, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case2_KsMac)]
                                    
-    [InlineData(10,  "00b08e000a", Case3_Length10_Command, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsMac)]
-    [InlineData(100, "00b08e0064", Case3_Length100_Command, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsMac)]
+    //[InlineData(10,  "00b08e000a", Case3_Length10_Command, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsMac)]
+    //[InlineData(100, "00b08e0064", Case3_Length100_Command, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsEnc, Step2_KsEncAndKsMacFromSharedSecret.Case3_KsMac)]
     [Theory]
      public void Write(int requestedLength, string hexPlain, string expected, string ksEncString, string ksMacString)
+    {
+        Test(requestedLength, hexPlain, expected, ksEncString, ksMacString);
+    }
+
+    [InlineData("Case 5")]
+    [InlineData("Case 6")]
+    [InlineData("Case 7")]
+    [InlineData("Case 8")]
+    [Theory]
+    public void UsingCases(string caseName)
+    {
+        var testCase = TestCases.Items[caseName];
+        Test(testCase.Length, testCase.CommandApdu, testCase.WrappedCommandApdu, testCase.KsEnc, testCase.KsMac);
+    }
+
+    private static void Test(int requestedLength, string hexPlain, string expected, string ksEncString, string ksMacString)
     {
         Trace.WriteLine("KsEnc     : " + ksEncString);
         Trace.WriteLine("KsMac     : " + ksMacString);

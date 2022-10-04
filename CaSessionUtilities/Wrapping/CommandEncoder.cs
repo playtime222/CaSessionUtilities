@@ -18,7 +18,16 @@ public class CommandEncoder
     {
         return WrapCommandAPDU(commandApdu);
     }
-    
+
+    public static CommandApdu CreateRbCommandApdu(int shortFileId, int fidByteCount)
+    {
+        int sfi = 0x80 | (shortFileId & 0xFF);
+        return new CommandApdu(ISO7816.CLA_ISO7816, ISO7816.INS_READ_BINARY, (byte)sfi, 0, fidByteCount);
+    }
+
+    public CommandApdu CreateWrappedRbCommandApdu(int shortFileId, int fidByteCount)
+        => Encode(CreateRbCommandApdu(shortFileId, fidByteCount));
+
     /**
      * Performs the actual encoding of a command APDU.
      * Based on Section E.3 of ICAO-TR-PKI, especially the examples.

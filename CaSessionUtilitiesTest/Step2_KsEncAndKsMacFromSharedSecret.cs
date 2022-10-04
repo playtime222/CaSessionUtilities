@@ -16,31 +16,30 @@ namespace CaSessionUtilitiesTest;
 //raw:  e71666984de8c71293a4b8363850128f9f9350078ae2faaa6dc0da2c464e9ea1
 public class Step2_KsEncAndKsMacFromSharedSecret
 {
-    public const string Case1_KsEnc = "55a5d572e5d4e99625b3fde47388244b8741a7f2a04ac5c7e84f022ad647cea7";
-    public const string Case1_KsMac = "3107d894b7ef43f50d7e3da0968373d8340e1adf315dbc92bec118459d494755";
-    public const string Case2_KsEnc = "0019666bcd8f18512a34a6ca368c6069b90f35feccbfc980568291266303e7eb";
-    public const string Case2_KsMac = "ed93f9068a8153856670d170346460a90bc5e0a644e29f6b100c730753008d4c";
-    public const string Case3_KsEnc = "73997b9688979a59ac7bc86320b719d80bd884ae7bea81014b7afa688feef70b";
-    public const string Case3_KsMac = "f349280fd9a0d191144b7d0d1a50432c34ea6018951f44f94241e47dfbebc930";
-    public const string Case5_KsEnc = "a48a9f2da65b5c29e2c6a1b551d82aa04e3715a8bf9a1e3ab31de2a6f186ebd4";
-    public const string Case5_KsMac = "7fad095e6366f68d7f63733b612e2f54c7b9f1a8c434c1011c65cdee38facca0";
-    //[InlineData(Step1_SharedSecretGeneration.SharedSecretCase1, Case1_KsEnc, Case1_KsMac)]
-    //[InlineData(Step1_SharedSecretGeneration.SharedSecretCase2, Case2_KsEnc, Case2_KsMac)]
-    //[InlineData(Step1_SharedSecretGeneration.SharedSecretCase3, Case3_KsEnc, Case3_KsMac)]
-    [InlineData(Step1_SharedSecretGeneration.Case5_SharedSecret, Case5_KsEnc, Case5_KsMac)]
+    [InlineData("J 1")]
+    [InlineData("Case 2")]
+    [InlineData("Case 3")]
+    [InlineData("Case 4")]
+    [InlineData("Case 5")]
+    [InlineData("Case 6")]
+    [InlineData("Case 7")]
+    [InlineData("Case 8")]
     [Theory]
-    public void SeedToKsEnc(string seedHex, string ksEncHex, string ksMacHex)
+    public void GenerateSharedSecretTests2(string caseName)
     {
-        var ksEnc = SessionMessagingWrapperKeyUtility.DeriveKey(Hex.Decode(seedHex), new(CipherAlgorithm.Aes, 256), SessionMessagingWrapperKeyUtility.ENC_MODE);
-        var ksMac = SessionMessagingWrapperKeyUtility.DeriveKey(Hex.Decode(seedHex), new(CipherAlgorithm.Aes, 256), SessionMessagingWrapperKeyUtility.MAC_MODE);
+        var testCase = TestCases.Items[caseName];
 
-        Trace.WriteLine("Seed         : " + seedHex);
+        var ksEnc = SessionMessagingWrapperKeyUtility.DeriveKey(Hex.Decode(testCase.SharedSecret), new(CipherAlgorithm.Aes, 256), SessionMessagingWrapperKeyUtility.ENC_MODE);
+        var ksMac = SessionMessagingWrapperKeyUtility.DeriveKey(Hex.Decode(testCase.SharedSecret), new(CipherAlgorithm.Aes, 256), SessionMessagingWrapperKeyUtility.MAC_MODE);
+
+        Trace.WriteLine("Seed         : " + testCase.SharedSecret);
         Trace.WriteLine("KsEnc Actual : " + Hex.ToHexString(ksEnc));
-        Trace.WriteLine("    Expected : " + ksEncHex);
+        Trace.WriteLine("    Expected : " + testCase.KsEnc);
         Trace.WriteLine("KsMac Actual : " + Hex.ToHexString(ksMac));
-        Trace.WriteLine("    Expected : " + ksMacHex);
+        Trace.WriteLine("    Expected : " + testCase.KsMac);
 
-        Assert.Equal(Hex.Decode(ksEncHex), ksEnc);
-        Assert.Equal(Hex.Decode(ksMacHex), ksMac);
+        Assert.Equal(Hex.Decode(testCase.KsEnc), ksEnc);
+        Assert.Equal(Hex.Decode(testCase.KsMac), ksMac);
     }
+
 }
