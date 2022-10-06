@@ -18,7 +18,7 @@ public class FindSingleMessageCommand
     {
         return await _Db.Messages
             .Where(x => x.Document.Owner.Id == userId && x.Id == id)
-            .Select(x => new ReceivedMessage { Id = x.Id, Note = x.Note, SenderEmail = x.FromUser.Email, WhenSent = x.WhenSent, ContentBase64 = Base64.ToBase64String(x.Content) })
+            .Select(x => new ReceivedMessage { Id = x.Id, Note = x.Note, SenderEmail = x.FromUser.Email, WhenSent = x.WhenSent.ToString("u"), ContentBase64 = Base64.ToBase64String(x.Content) })
             .SingleOrDefaultAsync();
     }
 }

@@ -41,7 +41,7 @@ public class CreateRdeMessageParametersCommandTests
     /// Note these tests only 
     /// </summary>
     [Fact]
-    private void GenerateZipMessage()
+    public void GenerateZipMessage()
     {
 
         //Sanity check

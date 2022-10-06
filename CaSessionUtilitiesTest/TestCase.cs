@@ -13,6 +13,7 @@ public class TestCase
     public string SharedSecret { get; init; }
     public string KsEnc { get; init; }
     public string KsMac { get; init; }
+    public int File { get; init; }
     public int Length { get; init; }
     public string CommandApdu { get; init; }
     public string WrappedCommandApdu { get; init; }

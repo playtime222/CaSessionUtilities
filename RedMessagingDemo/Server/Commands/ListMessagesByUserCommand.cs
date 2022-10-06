@@ -17,7 +17,7 @@ public class ListMessagesByUserCommand
     {
         var items = await _Db.Messages
             .Where(x => x.Document.Owner.Id == userId)
-            .Select(x => new ReceivedMessageListItem { Id = x.Id, Note = x.Note, SenderEmail = x.FromUser.Email, WhenSent = x.WhenSent, DocumentDisplayName=x.Document.DisplayName
+            .Select(x => new ReceivedMessageListItem { Id = x.Id, Note = x.Note, SenderEmail = x.FromUser.Email, WhenSent = x.WhenSent.ToString("u"), DocumentDisplayName=x.Document.DisplayName
             })
             .ToArrayAsync();
 

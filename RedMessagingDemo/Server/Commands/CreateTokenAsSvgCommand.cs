@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Configuration;
+using System.Net;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 using RedMessagingDemo.Server.Data;
@@ -11,10 +13,12 @@ namespace RedMessagingDemo.Server.Commands;
 public class CreateTokenAsSvgCommand
 {
     private readonly ApplicationDbContext _Db;
+    private readonly IConfiguration _Configuration;
 
-    public CreateTokenAsSvgCommand(ApplicationDbContext db)
+    public CreateTokenAsSvgCommand(ApplicationDbContext db, IConfiguration configuration)
     {
         _Db = db;
+        _Configuration = configuration;
     }
 
     public async Task<MobileDeviceLinkResponse> ExecuteAsync(string userId)
@@ -23,7 +27,14 @@ public class CreateTokenAsSvgCommand
 
         var randomBuffer = new byte[32];
         new SecureRandom().NextBytes(randomBuffer);
-        var tokenValue = Hex.ToHexString(randomBuffer);
+
+        var token = new ServicesToken()
+        {
+            AuthToken = Hex.ToHexString(randomBuffer),
+            IdentityUrl = _Configuration.GetValue(typeof(string), "BaseApiUri") as string ?? throw new InvalidOperationException("BaseApiUri setting not found.")
+        };
+        
+        var tokenValue = JsonConvert.SerializeObject(token); //TODO make it JSON and add the base url of the mobiledevice endpoints
 
         _Db.FakeApiTokens.Add(new() { ApplicationUser = user, Token = tokenValue });
         await _Db.SaveChangesAsync();

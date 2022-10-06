@@ -15,12 +15,12 @@ public class EnrolDocumentCommand
         _Db = db;
     }
 
-    public async Task Enrol([FromBody] DocumentEnrolmentRequestArgs args, string userId)
+    public async Task<DocumentEnrolmentResponse> Enrol([FromBody] DocumentEnrolmentRequestArgs args, string userId)
     {
         var user = _Db.Users.Single(x => x.Id == userId);
         var doc = new Document
         {
-            CaProtocolPublicKey = Hex.ToHexString(Base64.Decode   (args.ChipAuthenticationProtocolInfo.PublicKeyInfo.PublicKeyBase64)),
+            CaProtocolPublicKey = Hex.ToHexString(Base64.Decode(args.ChipAuthenticationProtocolInfo.PublicKeyInfo.PublicKeyBase64)),
             CaProtocolOid = args.ChipAuthenticationProtocolInfo.ProtocolOid,
             DataGroup14 = Base64.Decode(args.DataGroup14Base64),
             DisplayName = args.DisplayName,
@@ -31,6 +31,7 @@ public class EnrolDocumentCommand
         };
         await _Db.Documents.AddAsync(doc);
         await _Db.SaveChangesAsync();
+        return new() { Id = doc.Id };
     }
 
 }

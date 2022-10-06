@@ -56,12 +56,12 @@ namespace RedMessagingDemo.Server.Controllers.MobileDevices
         //Document args result
         // POST api/<DocumentsController>
         [HttpPost]
-        public async Task EnrolAsync([FromBody] DocumentEnrolmentRequestArgs args, [FromServices] EnrolDocumentCommand cmd, [FromServices] FindUserFromBearerTokenCommand findUser, [FromHeader] string authorize)
+        public async Task<DocumentEnrolmentResponse> EnrolAsync([FromBody] DocumentEnrolmentRequestArgs args, [FromServices] EnrolDocumentCommand cmd, [FromServices] FindUserFromBearerTokenCommand findUser, [FromHeader] string authorize)
         {
             if (!findUser.TryGet(authorize, out var user))
                 Unauthorized();
 
-            await cmd.Enrol(args, user!.Id);
+            return await cmd.Enrol(args, user!.Id);
         }
     }
 }

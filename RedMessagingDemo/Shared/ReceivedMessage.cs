@@ -2,9 +2,9 @@
 
 public class ReceivedMessage
 {
-    public virtual long Id { get; set; }
-    public virtual DateTime WhenSent { get; set; }
-    public virtual string SenderEmail { get; set; }
-    public virtual string Note { get; set; }
+    public long Id { get; set; }
+    public string WhenSent { get; set; }
+    public string SenderEmail { get; set; }
+    public string Note { get; set; }
     public string ContentBase64 { get; set; }
 }

@@ -42,6 +42,7 @@ public static class TestCases
         KsEnc = "6bc6e9edf0be19708286c0e68e9d0a87900b7361e112fb047fdbb3f1c93a9734",
         KsMac = "d789b423d7c7b7295b9fa38832f69d7500b346d148499ffc986e89281fdc022c",
         //Step3
+        File = 14,
         Length = 99,
         //x.CommandApdu = "";
         WrappedCommandApdu = "0cb08e000d9701638e08b77bd34e69bfabee00",
