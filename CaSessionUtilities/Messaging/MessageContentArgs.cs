@@ -10,7 +10,7 @@ public class MessageContentArgs
     private readonly List<FileArgs> _Files = new();
 
     
-    //TODO seperate building from accessing
+    //TODO separate building from accessing
     public FileArgs[] FileArgs => _Files.ToArray();
 
     public void Add(FileArgs file)

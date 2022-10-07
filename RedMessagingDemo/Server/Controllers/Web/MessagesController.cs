@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Utilities.Encoders;
 using RedMessagingDemo.Server.Commands;
-using RedMessagingDemo.Server.Data;
 using RedMessagingDemo.Shared;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -32,18 +30,7 @@ public class MessagesController : ControllerBase
         return item;
     }
 
-    //Document enrolment result
-    // POST api/<DocumentsController>
     [HttpPost]
     public async Task<ActionResult> Post([FromServices] SendMessageCommand sendMessage, [FromBody] MessageSendRequestArgs messageRequestArgs)
         => await sendMessage.ExecuteAsync(messageRequestArgs, this.GetUserId());
-
-    //// DELETE api/<DocumentsController>/5
-    //[HttpDelete("{id}")]
-    //public void Delete(int id)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-
 }
