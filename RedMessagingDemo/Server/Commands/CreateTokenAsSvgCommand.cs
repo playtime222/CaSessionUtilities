@@ -1,6 +1,6 @@
-﻿using System.Configuration;
-using System.Net;
+﻿using System.Net;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 using RedMessagingDemo.Server.Data;
@@ -28,15 +28,25 @@ public class CreateTokenAsSvgCommand
         var randomBuffer = new byte[32];
         new SecureRandom().NextBytes(randomBuffer);
 
+        var baseUrl = _Configuration.GetValue(typeof(string), "BaseApiUri") as string ?? throw new InvalidOperationException("BaseApiUri setting not found.");
+
+        var identityUrl = $"{baseUrl}/identity";
+
         var token = new ServicesToken()
         {
             AuthToken = Hex.ToHexString(randomBuffer),
-            IdentityUrl = _Configuration.GetValue(typeof(string), "BaseApiUri") as string ?? throw new InvalidOperationException("BaseApiUri setting not found.")
+            IdentityUrl = identityUrl
         };
-        
-        var tokenValue = JsonConvert.SerializeObject(token); //TODO make it JSON and add the base url of the mobiledevice endpoints
 
-        _Db.FakeApiTokens.Add(new() { ApplicationUser = user, Token = tokenValue });
+        var tokenValue = JsonConvert.SerializeObject(token, new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            }
+        });
+
+        _Db.FakeApiTokens.Add(new() { ApplicationUser = user, Token = token.AuthToken });
         await _Db.SaveChangesAsync();
 
         var writer = new BarcodeWriterSvg

@@ -20,18 +20,23 @@ public class IdentityController: ControllerBase
             {
                 new IdentityDocumentService
                 {
+                    Id="identity",
+                    Url = $"{baseUrl}/identity",
+                },
+                new IdentityDocumentService
+                {
                     Id="documents.add",
-                    Url = $"{baseUrl}/documents",
+                    Url = $"{baseUrl}/mobiledevices/documents",
                 },
                 new IdentityDocumentService
                 {
                     Id="messages.list",
-                    Url = $"{baseUrl}/messages/received",
+                    Url = $"{baseUrl}/mobiledevices/messages/received",
                 },
                 new IdentityDocumentService
                 {
                     Id="messages.getById",
-                    Url = $"{baseUrl}/messages/received", //+/id
+                    Url = $"{baseUrl}/mobiledevices/messages/received", //+/id
                 },
             }
         };

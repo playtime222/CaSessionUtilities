@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using RedMessagingDemo.Server.Data;
 using RedMessagingDemo.Server.Models;
 using RedMessagingDemo.Server.Commands;
+using System.Text.Json;
 
 namespace RedMessagingDemo
 {
@@ -45,6 +45,11 @@ namespace RedMessagingDemo
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            builder.Services.AddControllers().AddJsonOptions(j =>
+            {
+                j.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
 
             builder.Services.AddSwaggerGen(options => 
                 options.AddSecurityDefinition("oauth2", 
