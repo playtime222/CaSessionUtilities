@@ -4,6 +4,8 @@ using RedMessagingDemo.Server.Data;
 using RedMessagingDemo.Server.Models;
 using RedMessagingDemo.Server.Commands;
 using System.Text.Json;
+using Microsoft.AspNetCore.StaticFiles;
+using System.Reflection;
 
 namespace RedMessagingDemo
 {
@@ -13,7 +15,7 @@ namespace RedMessagingDemo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            //Database
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -21,28 +23,20 @@ namespace RedMessagingDemo
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            //Identity server
             builder.Services
-                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            builder.Services.AddScoped<CreateTokenAsSvgCommand>();
-            builder.Services.AddScoped<EnrolDocumentCommand>();
-            builder.Services.AddScoped<FindReceiverDocumentsCommand>();
-            builder.Services.AddScoped<FindSingleMessageCommand>();
-            builder.Services.AddScoped<FindSingleReceiverDocumentCommand>();
-            builder.Services.AddScoped<FindUserFromBearerTokenCommand>();
-            builder.Services.AddScoped<ListDocumentsByUserCommand>();
-            builder.Services.AddScoped<ListMessagesByUserCommand>();
-            builder.Services.AddScoped<SendMessageCommand>();
-            
             builder.Services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-            builder.Services.AddApiAuthorization();
 
             builder.Services.AddAuthentication()
                 .AddIdentityServerJwt();
 
+            builder.Services.AddApiAuthorization();
+
+            //Website
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
@@ -50,6 +44,8 @@ namespace RedMessagingDemo
             {
                 j.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
+
+
 
             builder.Services.AddSwaggerGen(options => 
                 options.AddSecurityDefinition("oauth2", 
@@ -61,6 +57,17 @@ namespace RedMessagingDemo
                     Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
                 }
                 ));
+
+            builder.Services.AddScoped<CreateTokenAsSvgCommand>();
+            builder.Services.AddScoped<EnrolDocumentCommand>();
+            builder.Services.AddScoped<FindReceiverDocumentsCommand>();
+            builder.Services.AddScoped<FindSingleMessageCommand>();
+            builder.Services.AddScoped<FindSingleReceiverDocumentCommand>();
+            builder.Services.AddScoped<FindUserFromBearerTokenCommand>();
+            builder.Services.AddScoped<ListDocumentsByUserCommand>();
+            builder.Services.AddScoped<ListMessagesByUserCommand>();
+            builder.Services.AddScoped<SendMessageCommand>();
+            builder.Services.AddScoped<CreateDownloadAsSvgCommand>();
 
             var app = builder.Build();
 
@@ -80,8 +87,18 @@ namespace RedMessagingDemo
             app.UseHttpsRedirection();
 
             app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles();
 
+            //var provider = new FileExtensionContentTypeProvider();
+            //provider.Mappings[".apk"] = "application/vnd.android.package-archive";
+            ////provider.Mappings[".apk"] = "application/text";
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    RequestPath = "/downloads",
+            //    ContentTypeProvider = provider,
+            //    //ServeUnknownFileTypes = true,
+            //});
+
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseIdentityServer();

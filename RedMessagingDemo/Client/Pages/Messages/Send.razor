@@ -101,7 +101,6 @@ else
                     DocumentDisplayName = document.DocumentDisplayName,
                     PcdPublicKey = Hex.ToHexString(rdeMessageParameters.EphemeralPublicKey),
                     Command = Hex.ToHexString(rdeMessageParameters.WrappedCommand),
-                    DebugInfo = rdeMessageParameters.DebugInfo
                 };
 
             var message = new ZipMessageEncoder().Encode(messageArgs, rdeMessageDecryptionInfo, secretKey);

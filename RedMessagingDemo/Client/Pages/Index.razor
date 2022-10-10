@@ -1,9 +1,37 @@
 ﻿@page "/"
+@using RedMessagingDemo.Shared
+@using System.Net;
+@inject HttpClient _HttpClient
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome to Remote Document Encryption Messaging Demo</h1>
 
-Welcome to your new app.
+<p>Please install the Android App by scanning this QR code (not available in Play Store. Requires permissions to instal unauthorized apps):</p>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@if (!string.IsNullOrEmpty(_QR))
+{
+    @((MarkupString)_QR)
+
+    <p>@_Token</p>
+}
+else
+{
+    <p>You were not worthy of a QR code :( Try refreshing.</p>
+}
+
+@code {
+    private string? _QR;
+    private string? _Token;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await _HttpClient.GetFromJsonAsync<DownloadUriQrCodeResponse>("api/downloads/rde-android-demo.apk");
+        if (response == null)
+            return;
+
+        _QR = WebUtility.HtmlDecode(response?.QrCodeSvg).Substring(198).Replace("viewBox=\"0 0 150 150\" ", "viewBox=\"0 0 150 150\" width=\"250px\" height=\"250px\" ");
+        _Token = response?.ContentUrl;
+    }
+}

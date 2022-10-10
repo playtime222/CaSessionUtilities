@@ -1,10 +1,8 @@
-﻿using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Crypto;
+﻿using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities.Encoders;
 using Org.BouncyCastle.X509;
 
 namespace CaSessionUtilities.Wrapping.Implementation;
@@ -40,7 +38,7 @@ public class EACCAProtocol
         var sharedSecret = ComputeSharedSecret(agreementAlg, piccPublicKey, pcdEphemeralKeyPair.Private);
         var wrapper = RestartSecureMessaging(protocolOid, sharedSecret); //And we are done.
 
-        return new RdeEACCAResult(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(pcdEphemeralKeyPair.Public).GetDerEncoded(), wrapper, new RdeEacCaResultDebugInfo { SharedSecretHex = Hex.ToHexString( sharedSecret) });
+        return new RdeEACCAResult(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(pcdEphemeralKeyPair.Public).GetDerEncoded(), wrapper);
     }
     
     public static AsymmetricCipherKeyPair CreateKeyPair(KeyAgreementAlgorithm agreementAlg, AsymmetricKeyParameter piccPublicKeyAsCipherParameter)

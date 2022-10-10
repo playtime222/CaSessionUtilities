@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CaSessionUtilities.Messaging;
-using CaSessionUtilities.Wrapping;
+﻿using CaSessionUtilities.Wrapping;
 using CaSessionUtilities.Wrapping.Implementation;
 using Org.BouncyCastle.Utilities;
-using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilities;
 
@@ -30,17 +25,6 @@ public class CreateRdeMessageParametersCommand
             WrappedCommand = wrappedCommand,
             WrappedResponse = wrappedResponse,
         };
-
-#if DEBUG
-        result.DebugInfo = new RdeMessageDebugInfo
-        {
-            WrappedResponseHex = Hex.ToHexString(wrappedResponse),
-            CaWrapperDebugInfo = caProtocol.Wrapper.Dump(),
-            ReadBinaryResponseHex = Hex.ToHexString(wrappedResponse),
-            SharedSecretHex = caProtocol.DebugInfo.SharedSecretHex
-        };
-#endif
-
         return result;
     }
 }
