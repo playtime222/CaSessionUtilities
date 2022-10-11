@@ -1,12 +1,14 @@
+using System;
 using System.Globalization;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 
-namespace CaSessionUtilities.Messaging.ZipV2;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging.ZipV2;
 
 
 public sealed class ZipMessageEncoder : IMessageEncoder
