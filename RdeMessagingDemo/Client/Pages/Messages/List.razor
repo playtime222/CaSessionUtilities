@@ -1,0 +1,48 @@
+﻿@page "/messages"
+@using Microsoft.AspNetCore.Authorization
+@using RdeMessagingDemo.Shared
+@using Newtonsoft.Json
+@attribute [Authorize]
+@inject HttpClient _HttpClient
+
+<PageTitle>Messages</PageTitle>
+
+<h3>Messages</h3>
+
+@if (_Messages == null || _Messages.Items.Length == 0)
+{
+    <p>Empty</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Received</th>
+                <th>Sender</th>
+                <th>Note</th>
+                <th/>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in _Messages.Items)
+            {
+                <tr>
+                    <td>@i.WhenSent</td>
+                    <td>@i.SenderEmail</td>
+                    <td>@i.Note</td>
+                    <td><a href="/messages/read/@i.Id">Read</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ReceivedMessageList _Messages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _Messages = await _HttpClient.GetFromJsonAsync<ReceivedMessageList>("/api/messages/received");
+    }
+}

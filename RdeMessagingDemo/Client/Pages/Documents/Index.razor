@@ -1,0 +1,64 @@
+﻿@page "/documents"
+@using Microsoft.AspNetCore.Authorization
+@using RdeMessagingDemo.Shared
+@using Newtonsoft.Json
+@attribute [Authorize]
+@inject HttpClient _HttpClient
+
+<PageTitle>Documents</PageTitle>
+
+<h3>Documents</h3>
+
+@if (_Documents == null || _Documents.Items.Length == 0)
+{
+    <p>Empty</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in _Documents.Items)
+            {
+                <tr>
+                    <td>@forecast.DisplayName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private DocumentList _Documents;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _Documents = await _HttpClient.GetFromJsonAsync<DocumentList>("/api/documents");
+    }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        var argle = await _HttpClient.GetAsync("/api/documents");
+
+    //        StateHasChanged();
+    //    }
+    //}
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    try
+    //    {
+    //        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+    //    }
+    //    catch (AccessTokenNotAvailableException exception)
+    //    {
+    //        exception.Redirect();
+    //    }
+    //}
+}

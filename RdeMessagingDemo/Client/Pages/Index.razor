@@ -1,0 +1,47 @@
+﻿@page "/"
+@using RdeMessagingDemo.Shared
+@using System.Net;
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient _HttpClient
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+
+<PageTitle>Index</PageTitle>
+
+<h1>Welcome to Remote Document Encryption Messaging Demo</h1>
+
+<Authorized>
+    <p>Please install the Android App by scanning the QR code below:</p>
+    @((MarkupString)_QR)
+    <p>@_Token</p>
+    <p>Not available in Play Store.</p>
+    <p>Requires permissions to install unauthorized apps.</p>
+</Authorized>
+
+<NotAuthorized>
+    <p>Please log in or register an account to use this service.</p>
+</NotAuthorized>
+
+@code {
+
+    private bool _Authenticated;
+    private string? _QR;
+    private string? _Token;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        _Authenticated = user.Identity?.IsAuthenticated ?? false;
+
+        if (!_Authenticated) return;
+
+        var response = await _HttpClient.GetFromJsonAsync<DownloadUriQrCodeResponse>("api/downloads/rde-android-demo.apk");
+        if (response == null)
+            return;
+
+        _QR = WebUtility.HtmlDecode(response?.QrCodeSvg).Substring(198).Replace("viewBox=\"0 0 150 150\" ", "viewBox=\"0 0 150 150\" width=\"250px\" height=\"250px\" ");
+        _Token = response?.ContentUrl;
+    }
+}

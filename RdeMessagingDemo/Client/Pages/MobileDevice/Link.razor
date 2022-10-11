@@ -1,0 +1,39 @@
+﻿@page "/link"
+@using System.Net;
+@using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities
+@using RdeMessagingDemo.Shared
+@using Microsoft.AspNetCore.Authorization
+@using System.Text;
+@using Org.BouncyCastle.Utilities.Encoders;
+
+@attribute [Authorize]
+@inject HttpClient _HttpClient
+<PageTitle>Link</PageTitle>
+
+@if (!string.IsNullOrEmpty(_QR))
+{
+    <p>Scan this QR code with the app... blah blah</p>
+    @((MarkupString)_QR)
+
+    @_Token
+}
+else
+{
+    <p>You were not worthy of a token.</p>
+}
+
+@code {
+    private string? _QR;
+    private string? _Token;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await _HttpClient.GetFromJsonAsync<MobileDeviceLinkResponse>("api/LinkedDevices/token");
+        if (response == null) 
+            return;
+
+        _QR = WebUtility.HtmlDecode(response?.TokenQrCodeSvg).Substring(198).Replace("viewBox=\"0 0 150 150\" ", "viewBox=\"0 0 150 150\" width=\"250px\" height=\"250px\" ");
+        _Token = response?.Token;
+    }
+}
