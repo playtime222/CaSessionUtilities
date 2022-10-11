@@ -1,6 +1,8 @@
-﻿using Org.BouncyCastle.Crypto.Digests;
+﻿using System;
+using System.Linq;
+using Org.BouncyCastle.Crypto.Digests;
 
-namespace CaSessionUtilities.Wrapping.Implementation;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 
 public static class SessionMessagingWrapperKeyUtility
 {

@@ -1,4 +1,7 @@
-namespace CaSessionUtilities.Messaging;
+using System;
+using System.Linq;
+
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging;
 
 /**
  * Pass this and a crypto spec to a message formatter

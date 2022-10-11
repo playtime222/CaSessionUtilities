@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
-using CaSessionUtilities.Wrapping.Implementation;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 
-namespace CaSessionUtilities.Wrapping;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
 
 public class CommandEncoder
 {

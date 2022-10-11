@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>CaSessionUtilities</RootNamespace>
+    <RootNamespace>NL.Rijksoverheid.RDW.RDE.CaSessionUtilities</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

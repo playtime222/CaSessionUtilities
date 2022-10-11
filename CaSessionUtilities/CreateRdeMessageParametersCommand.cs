@@ -1,8 +1,10 @@
-﻿using CaSessionUtilities.Wrapping;
-using CaSessionUtilities.Wrapping.Implementation;
+﻿using System;
+using System.Linq;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 using Org.BouncyCastle.Utilities;
 
-namespace CaSessionUtilities;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 
 public class CreateRdeMessageParametersCommand
 {

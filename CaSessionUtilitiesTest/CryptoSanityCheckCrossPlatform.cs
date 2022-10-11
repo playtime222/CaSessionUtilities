@@ -1,5 +1,5 @@
 using System;
-using CaSessionUtilities;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilitiesTest;

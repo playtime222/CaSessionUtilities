@@ -2,8 +2,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CaSessionUtilities.Messaging;
-using CaSessionUtilities.Messaging.ZipV2;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging.ZipV2;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 

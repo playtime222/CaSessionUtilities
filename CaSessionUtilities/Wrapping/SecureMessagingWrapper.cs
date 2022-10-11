@@ -1,8 +1,7 @@
-﻿using System.Text;
-using CaSessionUtilities.Messaging;
-using Org.BouncyCastle.Utilities.Encoders;
+﻿using System;
+using System.Linq;
 
-namespace CaSessionUtilities.Wrapping;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
 
 
 

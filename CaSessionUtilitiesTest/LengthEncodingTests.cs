@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using CaSessionUtilities.Wrapping;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilitiesTest;

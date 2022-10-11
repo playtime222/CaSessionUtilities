@@ -1,4 +1,7 @@
-﻿namespace CaSessionUtilities.Wrapping.Implementation;
+﻿using System;
+using System.Linq;
+
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 
 public static class PaddingIso9797
 {

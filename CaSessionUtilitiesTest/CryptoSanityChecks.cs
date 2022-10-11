@@ -1,5 +1,5 @@
 using System.Linq;
-using CaSessionUtilities;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Utilities.Encoders;
 

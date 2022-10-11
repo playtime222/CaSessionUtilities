@@ -1,11 +1,11 @@
-﻿using CaSessionUtilities;
+﻿using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace RedMessagingDemo.Client.Extras
 {
     public static class MappingEx
     {
-        public static CaSessionUtilities.CaSessionArgs ToCaSessionArgs(this RedMessagingDemo.Shared.ChipAuthenticationProtocolInfo thiz)
+        public static CaSessionArgs ToCaSessionArgs(this RedMessagingDemo.Shared.ChipAuthenticationProtocolInfo thiz)
                 => new()
                 {
                     ProtocolOid = thiz.ProtocolOid,

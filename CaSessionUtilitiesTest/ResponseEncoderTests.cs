@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
-using CaSessionUtilities;
-using CaSessionUtilities.Wrapping;
-using CaSessionUtilities.Wrapping.Implementation;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Encoders;

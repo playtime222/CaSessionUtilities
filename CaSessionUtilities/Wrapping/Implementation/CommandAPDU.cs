@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Org.BouncyCastle.Utilities;
 
-namespace CaSessionUtilities.Wrapping.Implementation
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
 {
     public class CommandApdu
     {

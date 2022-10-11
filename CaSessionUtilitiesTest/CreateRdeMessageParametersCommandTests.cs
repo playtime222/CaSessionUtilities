@@ -1,12 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-using CaSessionUtilities;
-using CaSessionUtilities.Messaging;
-using CaSessionUtilities.Messaging.ZipV2;
-using CaSessionUtilities.Wrapping;
-using CaSessionUtilities.Wrapping.Implementation;
 using Newtonsoft.Json;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging.ZipV2;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;

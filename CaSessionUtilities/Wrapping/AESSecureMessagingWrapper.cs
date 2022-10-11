@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using Org.BouncyCastle.Utilities.Encoders;
 
-namespace CaSessionUtilities.Wrapping;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
 
 public class AesSecureMessagingWrapper : SecureMessagingWrapper
 {

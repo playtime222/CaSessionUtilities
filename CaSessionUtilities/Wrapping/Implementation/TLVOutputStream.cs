@@ -1,4 +1,7 @@
-﻿namespace CaSessionUtilities.Wrapping.Implementation;
+﻿using System;
+using System.Linq;
+
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 //package net.sf.scuba.tlv;
 
 //import java.io.DataOutputStream;

@@ -1,6 +1,8 @@
-﻿using Org.BouncyCastle.Utilities.Encoders;
+﻿using System;
+using System.Linq;
+using Org.BouncyCastle.Utilities.Encoders;
 
-namespace CaSessionUtilities;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 
 public static class FormattingUtilities
 {

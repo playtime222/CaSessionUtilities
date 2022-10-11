@@ -1,7 +1,9 @@
-﻿using CaSessionUtilities.Messaging;
+﻿using System;
+using System.Linq;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging;
 using Org.BouncyCastle.Utilities.Encoders;
 
-namespace CaSessionUtilities;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 
 public static class Mapping
 {

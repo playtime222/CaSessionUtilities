@@ -1,4 +1,7 @@
-﻿namespace CaSessionUtilities.Wrapping;
+﻿using System;
+using System.Linq;
+
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
 
 public class DESedeSecureMessagingWrapper : SecureMessagingWrapper
 {

@@ -1,6 +1,8 @@
-﻿using CaSessionUtilities.Wrapping;
+﻿using System;
+using System.Linq;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
 
-namespace CaSessionUtilities;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 
 public record RdeEACCAResult
 {

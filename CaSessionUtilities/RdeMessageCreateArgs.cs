@@ -1,4 +1,7 @@
-﻿namespace CaSessionUtilities;
+﻿using System;
+using System.Linq;
+
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 
 /// <summary>
 /// Should contain RDE 'Certificate'

@@ -1,11 +1,13 @@
-﻿using Org.BouncyCastle.Crypto;
+﻿using System;
+using System.Linq;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace CaSessionUtilities.Wrapping.Implementation;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 
 public class EACCAProtocol
 {

@@ -1,6 +1,7 @@
-﻿using CaSessionUtilities.Messaging;
+﻿using System;
+using System.Linq;
 
-namespace CaSessionUtilities;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 
 public record RdeMessageParameters
 {

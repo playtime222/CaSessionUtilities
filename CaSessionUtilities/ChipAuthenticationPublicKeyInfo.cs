@@ -1,6 +1,8 @@
-﻿using Org.BouncyCastle.Math;
+﻿using System;
+using System.Linq;
+using Org.BouncyCastle.Math;
 
-namespace CaSessionUtilities;
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 
 /// <summary>
 /// All from DG14. This is the dto.

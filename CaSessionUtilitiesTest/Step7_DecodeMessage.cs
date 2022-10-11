@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
-using CaSessionUtilities.Messaging.ZipV2;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging.ZipV2;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilitiesTest;

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using CaSessionUtilities.Wrapping;
-using CaSessionUtilities.Wrapping.Implementation;
+using NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace CaSessionUtilitiesTest;

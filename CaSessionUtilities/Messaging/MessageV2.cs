@@ -1,4 +1,7 @@
-namespace CaSessionUtilities.Messaging;
+using System;
+using System.Linq;
+
+namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Messaging;
 
 public class MessageV2 {
     public string Note { get; }
