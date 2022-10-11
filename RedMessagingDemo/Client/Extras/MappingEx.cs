@@ -1,23 +1,19 @@
-﻿using Org.BouncyCastle.Utilities.Encoders;
-using RedMessagingDemo.Shared;
+﻿using CaSessionUtilities;
+using Org.BouncyCastle.Utilities.Encoders;
 
 namespace RedMessagingDemo.Client.Extras
 {
     public static class MappingEx
     {
-        public static CaSessionUtilities.CaSessionArgs ToCaSessionArgs(this ChipAuthenticationProtocolInfo thiz)
+        public static CaSessionUtilities.CaSessionArgs ToCaSessionArgs(this RedMessagingDemo.Shared.ChipAuthenticationProtocolInfo thiz)
                 => new()
                 {
                     ProtocolOid = thiz.ProtocolOid,
-                    PublicKeyInfo = thiz.PublicKeyInfo.ToPublicKeyInfo()
+                    PublicKeyInfo = new()
+                    {
+                        PublicKey = Base64.Decode(thiz.PublicKeyInfo.PublicKeyBase64)
+                    }
                 };
-        
-        public static CaSessionUtilities.ChipAuthenticationPublicKeyInfo ToPublicKeyInfo(this ChipAuthenticationPublicKeyInfo thiz)
-                => new()
-                {
-                    PublicKey = Base64.Decode(thiz.PublicKeyBase64)
-                }
-        ;
     }
 
 }

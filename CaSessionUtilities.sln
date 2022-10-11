@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaSessionUtilities", "CaSessionUtilities\CaSessionUtilities.csproj", "{23125337-C1C8-4FDD-AC55-9FFBEC3D501A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RdeCaSessionUtilities", "CaSessionUtilities\RdeCaSessionUtilities.csproj", "{23125337-C1C8-4FDD-AC55-9FFBEC3D501A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaSessionUtilitiesTest", "CaSessionUtilitiesTest\CaSessionUtilitiesTest.csproj", "{81FD8829-7696-49DA-A27A-6A08EEA0D02A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RdeCaSessionUtilitiesTest", "CaSessionUtilitiesTest\RdeCaSessionUtilitiesTest.csproj", "{81FD8829-7696-49DA-A27A-6A08EEA0D02A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaSessionUtilitiesTests", "CaSessionUtilitiesTests\CaSessionUtilitiesTests.csproj", "{ABC92A0A-3BA0-4BA2-A075-3D6B191B90E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RdeCaSessionUtilitiesTests", "CaSessionUtilitiesTests\RdeCaSessionUtilitiesTests.csproj", "{ABC92A0A-3BA0-4BA2-A075-3D6B191B90E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedMessagingDemo.Server", "RedMessagingDemo\Server\RedMessagingDemo.Server.csproj", "{A2EA8952-6600-442E-AFFB-5A36660AD9CD}"
 EndProject
