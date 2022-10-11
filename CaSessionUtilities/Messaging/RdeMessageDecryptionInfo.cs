@@ -23,12 +23,4 @@ public class RdeMessageDecryptionInfo
     /// Encrypted RB command 
     /// </summary>
     public string Command { get; set; } //from EAC CA session
-
-
-#if DEBUG
-    /// <summary>
-    /// TODO NB this member contains secret information that should not be present in a production system
-    /// </summary>
-    public RdeMessageDebugInfo DebugInfo { get; set; }
-#endif
 }

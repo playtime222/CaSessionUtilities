@@ -38,16 +38,4 @@ public abstract class SecureMessagingWrapper
     public abstract byte[] CalculateMac(byte[] data);
 
     public abstract byte[] GetEncodedDataForResponse(byte[] paddedResponse);
-
-    public SecureMessagingWrapperDebugInfo Dump()
-    {
-        return new SecureMessagingWrapperDebugInfo
-        {
-            Type = GetType().Name,
-            Cipher = CipherAlg,
-            Mac = MacAlg,
-            KsEnc = Hex.ToHexString(KsEnc),
-            KsMac = Hex.ToHexString(KsMac),
-        };
-    }
 }

@@ -21,12 +21,4 @@ public record RdeMessageParameters
     /// Seed for generating message cipher key
     /// </summary>
     public byte[] WrappedResponse { get; init; }
-
-
-#if DEBUG
-    /// <summary>
-    /// Internal information of 
-    /// </summary>
-    public RdeMessageDebugInfo DebugInfo { get; set; }
-#endif
 }
