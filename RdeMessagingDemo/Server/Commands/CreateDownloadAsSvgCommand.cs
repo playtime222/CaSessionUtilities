@@ -13,9 +13,13 @@ public class CreateDownloadAsSvgCommand
         _Configuration = configuration;
     }
 
-    public async Task<DownloadUriQrCodeResponse> ExecuteAsync(string _)
+    public async Task<DownloadUriQrCodeResponse> ExecuteAsync(string fileName)
     {
-        var contentUrl = _Configuration.GetValue(typeof(string), "AndroidApkUri") as string ?? throw new InvalidOperationException("AndroidApkUri setting not found.");
+        //var contentUrl = _Configuration.GetValue(typeof(string), "AndroidApkUri") as string ?? throw new InvalidOperationException("AndroidApkUri setting not found.");
+
+        var contentUrl = _Configuration.GetValue(typeof(string), "BaseApiUri") as string ?? throw new InvalidOperationException("Base API Uri setting not found.");
+
+        contentUrl = $"{contentUrl}/downloads/{fileName}";
 
         var writer = new BarcodeWriterSvg
         {
