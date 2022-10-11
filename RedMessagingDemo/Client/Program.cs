@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using RedMessagingDemo.Client;
 
-namespace RedMessagingDemo.Client
+namespace RdeMessagingDemo.Client
 {
     public class Program
     {

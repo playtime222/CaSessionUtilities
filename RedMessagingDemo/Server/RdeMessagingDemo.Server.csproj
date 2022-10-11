@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\RedMessagingDemo.Client.csproj" />
+    <ProjectReference Include="..\Client\RdeMessagingDemo.Client.csproj" />
     <ProjectReference Include="..\Shared\RedMessagingDemo.Shared.csproj" />
   </ItemGroup>
 

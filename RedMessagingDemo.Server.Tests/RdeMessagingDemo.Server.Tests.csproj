@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RedMessagingDemo\Server\RedMessagingDemo.Server.csproj" />
+    <ProjectReference Include="..\RedMessagingDemo\Server\RdeMessagingDemo.Server.csproj" />
   </ItemGroup>
 
 </Project>
