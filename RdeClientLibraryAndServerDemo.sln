@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedMessagingDemo.Shared", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RdeMessagingDemo.Server.Tests", "RedMessagingDemo.Server.Tests\RdeMessagingDemo.Server.Tests.csproj", "{6B9AF112-044D-4858-8C9A-19F66AEF7C5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdeMessaging", "RdeMessageFormat\RdeMessaging.csproj", "{B3471ED5-BE08-40CD-BA00-CE49D4DBCADA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{6B9AF112-044D-4858-8C9A-19F66AEF7C5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B9AF112-044D-4858-8C9A-19F66AEF7C5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B9AF112-044D-4858-8C9A-19F66AEF7C5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3471ED5-BE08-40CD-BA00-CE49D4DBCADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3471ED5-BE08-40CD-BA00-CE49D4DBCADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3471ED5-BE08-40CD-BA00-CE49D4DBCADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3471ED5-BE08-40CD-BA00-CE49D4DBCADA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

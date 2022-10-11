@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CaSessionUtilities\RdeCaSessionUtilities.csproj" />
+    <ProjectReference Include="..\RdeMessageFormat\RdeMessaging.csproj" />
   </ItemGroup>
 
 </Project>
