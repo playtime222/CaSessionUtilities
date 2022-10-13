@@ -12,10 +12,10 @@
 
 @if (!string.IsNullOrEmpty(_QR))
 {
-    <p>Scan this QR code with the app... blah blah</p>
+    <p>Scan this QR code with the app:</p>
     @((MarkupString)_QR)
 
-    @_Token
+    <p>@_Token</p>
 }
 else
 {
