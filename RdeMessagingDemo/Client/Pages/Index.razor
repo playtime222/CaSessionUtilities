@@ -10,17 +10,20 @@
 
 <h1>Welcome to Remote Document Encryption Messaging Demo</h1>
 
-<Authorized>
+@if (_Authenticated)
+{
     <p>Please install the Android App by scanning the QR code below:</p>
-    @((MarkupString)_QR)
+    @(
+    (MarkupString)_QR
+    )
     <p>@_Token</p>
     <p>Not available in Play Store.</p>
     <p>Requires permissions to install unauthorized apps.</p>
-</Authorized>
-
-<NotAuthorized>
+}
+else
+{
     <p>Please log in or register an account to use this service.</p>
-</NotAuthorized>
+}
 
 @code {
 
