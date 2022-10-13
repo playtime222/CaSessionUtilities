@@ -115,11 +115,10 @@ else
 
             var result = await _HttpClient.PostAsJsonAsync("/api/messages", sendArgs);
 
-            if (result.IsSuccessStatusCode)
-                _NavManager.NavigateTo("/sent");
-
-            //TODO error...
-
+            if (!result.IsSuccessStatusCode)
+                _NavManager.NavigateTo("/sendfailed");
+            
+            _NavManager.NavigateTo("/sent");
         } 
         catch (Exception ex)
         {
