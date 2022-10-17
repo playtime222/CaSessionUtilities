@@ -40,7 +40,7 @@ else
 
         if (!_Authenticated) return;
 
-        var response = await _HttpClient.GetFromJsonAsync<DownloadUriQrCodeResponse>("api/downloads/qr/rde-android-demo-1.2.apk");
+        var response = await _HttpClient.GetFromJsonAsync<DownloadUriQrCodeResponse>("api/downloads/qr/rde-android-demo-1.2.1.apk");
         if (response == null)
             return;
 

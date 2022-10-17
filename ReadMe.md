@@ -98,15 +98,12 @@ The project RdeCaSessionUtilities contains the source code of a .NET 6 library w
 
 - Only a Netherlands passport using PACE or BAC is supported.
 - Very basic UX.
-- Most tasks do not give clear indications of progress, completion or failure.
-- No scanning of MRTD MRZs.
+- Most tasks do not give clear indications of progress.
+- Camera scanning of MRTD MRZs is not supported.
 - If the contents of a decrypted file are not plain text, they will be displayed as hex.
 - Only the name and contents of the first decrypted file are displayed.
-- The decryption process is missing a screen to enter MRZ information. The workaround is to start a Document Enrolment screen, enter the MRZ and tap Next. The enrolment does not have to be completed.
 
 #### Developer Notes
 
 - Current version of JMRTD is 0.7.34. This appears to have a bug when performing PACE on a Netherlands Driving License.
-- An attempt to fix the above issue by moving to JMRTD 0.7.9 (which has minor breaking changes that simplify the API) fails when performing PACE or BAC with either a passport or a driving license.
-
 
