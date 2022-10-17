@@ -20,14 +20,14 @@ public class FindSingleMessageCommand
     {
         return await _Db.Messages
             .Where(x => x.Document.Owner.Id == userId && x.Id == id)
-            .Select(x => ReceivedMessage(x))
+            .Select(x => new ReceivedMessage
+            {
+                Id = x.Id,
+                Note = x.Note,
+                SenderEmail = x.FromUser.Email,
+                WhenSent = x.WhenSent.ToString("u"),
+                ContentBase64 = Base64UrlEncoder.Encode(x.Content)
+            })
             .SingleOrDefaultAsync();
-    }
-
-    private static ReceivedMessage ReceivedMessage(Message x)
-    {
-        var hex = Hex.ToHexString(x.Content); //Debug
-        return new ReceivedMessage { Id = x.Id, Note = x.Note, SenderEmail = x.FromUser.Email, WhenSent = x.WhenSent.ToString("u"), 
-            ContentBase64 = Base64UrlEncoder.Encode(x.Content) }; //TODO stop url encoding!
     }
 }
