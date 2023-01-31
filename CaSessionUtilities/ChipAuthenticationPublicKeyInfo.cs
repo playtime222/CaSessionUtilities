@@ -10,13 +10,13 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 public record ChipAuthenticationPublicKeyInfo
 {
     [Obsolete("Fallback only?")]
-    public string Oid { get; init; }
+    public string Oid { get; set; }
 
     //EC or ECDH, ASN.1 DER?
-    public byte[] PublicKey { get; init; }
+    public byte[] PublicKey { get; set; }
 
 
     [Obsolete("Fallback only?")]
     //String? Key OID???
-    public BigInteger KeyId { get; init; }
+    public BigInteger KeyId { get; set; }
 }

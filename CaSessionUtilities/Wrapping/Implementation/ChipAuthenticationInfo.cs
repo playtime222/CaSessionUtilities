@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 
@@ -8,7 +8,7 @@ public static class ChipAuthenticationInfo
     public static ChipAuthenticationCipherInfo GetCipher(string oid)
         => _CipherInfo.TryGetValue(oid, out var result) ? result : throw new InvalidOperationException("Unsupported OID.");
 
-    private readonly static Dictionary<string, ChipAuthenticationCipherInfo> _CipherInfo = new()
+    private static readonly Dictionary<string, ChipAuthenticationCipherInfo> _CipherInfo = new()
     {
         {ID_CA_DH_3DES_CBC_CBC, new(CipherAlgorithm.DESede,128) },
         {ID_CA_ECDH_3DES_CBC_CBC , new(CipherAlgorithm.DESede, 128) },
@@ -36,7 +36,7 @@ public static class ChipAuthenticationInfo
     public static KeyAgreementAlgorithm GetKeyAgreementAlgorithm(string oid)
         => _CipherInfo2.TryGetValue(oid, out var result) ? result : throw new InvalidOperationException("Unsupported OID.");
 
-    private readonly static Dictionary<string, KeyAgreementAlgorithm> _CipherInfo2 = new()
+    private static readonly Dictionary<string, KeyAgreementAlgorithm> _CipherInfo2 = new()
     {
         {ID_CA_DH_3DES_CBC_CBC,       KeyAgreementAlgorithm.DH },
         {ID_CA_ECDH_3DES_CBC_CBC ,    KeyAgreementAlgorithm.ECDH },

@@ -1,12 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+	  <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+</ItemGroup>
+	<ItemGroup>
     <ProjectReference Include="..\CaSessionUtilities\RdeCaSessionUtilities.csproj" />
   </ItemGroup>
 

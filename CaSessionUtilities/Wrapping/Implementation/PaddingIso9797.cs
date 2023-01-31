@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.IO;
 
 namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation;
 
@@ -36,7 +35,4 @@ public static class PaddingIso9797
     /// <returns></returns>
     public static byte[] GetPaddedArrayMethod1(byte[] input, int blockSize) => input.Length % blockSize == 0 ? input : GetPaddedArrayMethod2(input, blockSize);
 
-    //private static int GetPaddedLengthMethod1(int inputSize, int blockSize) => (inputSize + blockSize) / blockSize * blockSize;
-
-    //private static bool SizeAlignsWithBlockSize(int inputSize, int blockSize) => GetPaddedLengthMethod1(inputSize, blockSize) == inputSize;
 }

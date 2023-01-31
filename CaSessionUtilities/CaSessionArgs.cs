@@ -12,6 +12,6 @@ public record CaSessionArgs
     //caSessionArgs.getCaPublicKeyInfo().getObjectIdentifier(),
     //caSessionArgs.getCaPublicKeyInfo().getSubjectPublicKey());
     //caSessionArgs.getCaInfo().getObjectIdentifier(),
-    public string ProtocolOid { get; init; }
-    public ChipAuthenticationPublicKeyInfo PublicKeyInfo { get; init; }
+    public string ProtocolOid { get; set; }
+    public ChipAuthenticationPublicKeyInfo PublicKeyInfo { get; set; }
 }

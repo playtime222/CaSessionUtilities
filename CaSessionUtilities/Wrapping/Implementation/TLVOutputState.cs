@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.IO;
 
 namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
 {
@@ -8,7 +9,7 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
         ///**
         // * Encoded the tags, lengths, and (partial) values.
         // */
-        private Queue<TLVStruct> state = new();
+        private readonly Queue<TLVStruct> _State = new();
 
         //      /*
         //       * Encoded position, only one can be true.
@@ -19,9 +20,9 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
         //       * FFT: TLVVVV^VV
         //       * TFF: ^
         //       */
-        private bool isAtStartOfTag;
-        private bool isAtStartOfLength;
-        private bool isReadingValue;
+        private bool _IsAtStartOfTag;
+        private bool _IsAtStartOfLength;
+        //private bool _IsReadingValue;
 
         //      public TLVOutputState()
         //      {
@@ -43,91 +44,43 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
 
         public bool getIsAtStartOfTag()
         {
-            return isAtStartOfTag;
+            return _IsAtStartOfTag;
         }
 
         public bool getIsAtStartOfLength()
         {
-            return isAtStartOfLength;
+            return _IsAtStartOfLength;
         }
-
-        //      public boolean isProcessingValue()
-        //      {
-        //          return isReadingValue;
-        //      }
-
-        //      public int getTag()
-        //      {
-        //          if (state.isEmpty())
-        //          {
-        //              throw new InvalidOperationException("Tag not yet read.");
-        //          }
-        //          TLVStruct currentObject = state.peek();
-        //          return currentObject.getTag();
-        //      }
-
-        //      public int getLength()
-        //      {
-        //          if (state.isEmpty())
-        //          {
-        //              throw new InvalidOperationException("Length not yet known.");
-        //          }
-        //          TLVStruct currentObject = state.peek();
-        //          int length = currentObject.getLength();
-        //          if (length < 0)
-        //          {
-        //              throw new InvalidOperationException("Length not yet knwon.");
-        //          }
-        //          return length;
-        //      }
-
-        //      public int getValueBytesProcessed()
-        //      {
-        //          TLVStruct currentObject = state.peek();
-        //          return currentObject.getValueBytesProcessed();
-        //      }
-
-        //      public int getValueBytesLeft()
-        //      {
-        //          if (state.isEmpty())
-        //          {
-        //              throw new InvalidOperationException("Length of value is unknown.");
-        //          }
-        //          TLVStruct currentObject = state.peek();
-        //          int currentLength = currentObject.getLength();
-        //          int valueBytesRead = currentObject.getValueBytesProcessed();
-        //          return currentLength - valueBytesRead;
-        //      }
 
         public void setTagProcessed(int tag)
         {
             /* Length is set to MAX INT, we will update it when caller calls our setLengthProcessed. */
             var obj = new TLVStruct(tag);
-            if (state.Count != 0)
+            if (_State.Count != 0)
             {
-                var parent = state.Peek();
+                var parent = _State.Peek();
                 var tagBytes = TLVUtil.GetTagAsBytes(tag);
                 parent.write(tagBytes, 0, tagBytes.Length);
             }
-            state.Enqueue(obj);
-            isAtStartOfTag = false;
-            isAtStartOfLength = true;
-            isReadingValue = false;
+            _State.Enqueue(obj);
+            _IsAtStartOfTag = false;
+            _IsAtStartOfLength = true;
+            //_IsReadingValue = false;
         }
 
         public void setDummyLengthProcessed()
         {
-            isAtStartOfTag = false;
-            isAtStartOfLength = false;
-            isReadingValue = true;
+            _IsAtStartOfTag = false;
+            _IsAtStartOfLength = false;
+            //_IsReadingValue = true;
             /* NOTE: doesn't call setLength, so that isLengthSet in stackFrame will remain false. */
         }
 
         public bool isDummyLengthSet()
         {
-            if (state.Count == 0)
+            if (_State.Count == 0)
                 return false;
-            return !state.Peek().isLengthSet();
+            return !_State.Peek().isLengthSet();
         }
 
         public void setLengthProcessed(int length)
@@ -135,18 +88,18 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
             if (length < 0)
                 throw new ArgumentException("Cannot set negative length (length = " + length + ").");
 
-            var obj = state.Dequeue();
-            if (state.Count != 0)
+            var obj = _State.Dequeue();
+            if (_State.Count != 0)
             {
-                var parent = state.Peek();
+                var parent = _State.Peek();
                 var lengthBytes = TLVUtil.GetLengthAsBytes(length);
                 parent.write(lengthBytes, 0, lengthBytes.Length);
             }
             obj.setLength(length);
-            state.Enqueue(obj);
-            isAtStartOfTag = false;
-            isAtStartOfLength = false;
-            isReadingValue = true;
+            _State.Enqueue(obj);
+            _IsAtStartOfTag = false;
+            _IsAtStartOfLength = false;
+            //_IsReadingValue = true;
         }
 
         //      public void updatePreviousLength(int byteCount)
@@ -180,9 +133,9 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
 
         public void updateValueBytesProcessed(byte[] bytes, int offset, int length)
         {
-            if (state.Count == 0)
+            if (_State.Count == 0)
                 return;
-            var currentObject = state.Peek();
+            var currentObject = _State.Peek();
             var bytesLeft = currentObject.getLength() - currentObject.getValueBytesProcessed();
             if (length > bytesLeft)
                 throw new ArgumentException("Cannot process " + length + " bytes! Only " + bytesLeft + " bytes left in this TLV object " + currentObject);
@@ -192,18 +145,18 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
             if (currentObject.getValueBytesProcessed() == currentObject.getLength())
             {
                 /* Stand back! I'm going to try recursion! Update parent(s)... */
-                state.Dequeue();
+                _State.Dequeue();
                 updateValueBytesProcessed(currentObject.getValue(), 0, currentObject.getLength());
-                isAtStartOfTag = true;
-                isAtStartOfLength = false;
-                isReadingValue = false;
+                _IsAtStartOfTag = true;
+                _IsAtStartOfLength = false;
+                //_IsReadingValue = false;
             }
             else
             {
                 /* We already have these values?!? */
-                isAtStartOfTag = false;
-                isAtStartOfLength = false;
-                isReadingValue = true;
+                _IsAtStartOfTag = false;
+                _IsAtStartOfLength = false;
+                //_IsReadingValue = true;
             }
         }
 
@@ -227,7 +180,7 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities.Wrapping.Implementation
         //       */
         public bool canBeWritten()
         {
-            foreach (var stackFrame in state)
+            foreach (var stackFrame in _State)
             {
                 if (!stackFrame.isLengthSet())
                     return false;

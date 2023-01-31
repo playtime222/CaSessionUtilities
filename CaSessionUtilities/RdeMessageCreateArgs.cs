@@ -9,12 +9,12 @@ namespace NL.Rijksoverheid.RDW.RDE.CaSessionUtilities;
 /// </summary>
 public record RdeMessageCreateArgs
 {
-    public CaSessionArgs CaSessionArgs { get; init; }
-    public int FileShortId { get; init; }
-    public byte[] FileContent { get; init; }
+    public CaSessionArgs CaSessionArgs { get; set; }
+    public int FileShortId { get; set; }
+    public byte[] FileContent { get; set; }
 
     /// <summary>
     /// Max is 256 cos max transceive length
     /// </summary>
-    public int ReadLength { get; init; }
+    public int ReadLength { get; set; }
 }
